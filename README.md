@@ -13,6 +13,7 @@ The purpose of this project is to create a robust and user-friendly platform tha
 
 ### Frontend
 - **Flutter**: A cross-platform framework for building natively compiled applications for mobile, web, and desktop from a single codebase. Flutter is used to create a responsive and intuitive user interface for the application.
+- **NextJS**: Next.js is an open-source web development framework created by the private company Vercel providing React-based web applications with server-side rendering and static rendering.
 
 ### Backend
 - **NestJS**: A progressive Node.js framework for building efficient, reliable, and scalable server-side applications. NestJS is used to create RESTful APIs and handle business logic for the system.
@@ -66,6 +67,7 @@ Follow the steps below to clone, set up, and run the project on your local machi
      ```bash
      npm run start
      ```
+   - More detailed instructions are on the [Backend Repo](https://github.com/AA-Siddiqui/University-Management-System-Backend-F24-WE)
 
 3. **Set Up the Frontend**:
    - Navigate to the frontend directory:
@@ -84,6 +86,22 @@ Follow the steps below to clone, set up, and run the project on your local machi
      ```bash
      flutter run
      ```
+     ```
+
+4. **Set Up the Admin Frontend**:
+   - Navigate to the admin frontend directory:
+     ```bash
+     cd ../admin-frontend
+     ```
+   - Install dependencies:
+     ```bash
+     npm install
+     ```
+   - Run the Flutter application:
+     ```bash
+     npm run build
+     ```
+   - More detailed instructions are on the [Fronted Repo](https://github.com/AA-Siddiqui/University-Management-System-Frontend-F24-WE)
 
 4. **Access the Application**:
    - The Flutter application will launch on your connected device or emulator.
