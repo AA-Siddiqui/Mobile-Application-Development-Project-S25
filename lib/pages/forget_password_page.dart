@@ -1,11 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:project/pages/forget_password_page.dart';
 import 'package:project/utils/email_validator.dart';
 import 'package:project/utils/show_snack_bar.dart';
 import 'dart:core';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class SupaEmailAuth extends StatefulWidget {
+class ForgetPasswordPage extends StatelessWidget {
+  const ForgetPasswordPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Container(
+          padding: EdgeInsets.all(16),
+          width: MediaQuery.sizeOf(context).width * 0.8,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 36),
+                child: Text(
+                  "UMS",
+                  style: TextStyle(
+                    fontSize: 36,
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Builder(builder: (context) {
+                return SupaForgetAuth(
+                  onSignInComplete: (_) {},
+                );
+              }),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SupaForgetAuth extends StatefulWidget {
   /// The URL to redirect the user to when clicking on the link on the
   /// confirmation link after signing up.
   final String? redirectTo;
@@ -41,7 +77,7 @@ class SupaEmailAuth extends StatefulWidget {
   final Widget? prefixIconPassword;
 
   /// {@macro supa_email_auth}
-  const SupaEmailAuth({
+  const SupaForgetAuth({
     super.key,
     this.redirectTo,
     this.resetPasswordRedirectTo,
@@ -55,18 +91,13 @@ class SupaEmailAuth extends StatefulWidget {
   });
 
   @override
-  State<SupaEmailAuth> createState() => _SupaEmailAuthState();
+  State<SupaForgetAuth> createState() => _SupaEmailAuthState();
 }
 
-class _SupaEmailAuthState extends State<SupaEmailAuth> {
+class _SupaEmailAuthState extends State<SupaForgetAuth> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
-  bool _isLoading = false;
-
-  /// The user has pressed forgot password button
-  // bool _isRecoveringPassword = false;
 
   /// Focus node for email field
   final FocusNode _emailFocusNode = FocusNode();
@@ -99,7 +130,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
               autovalidateMode: AutovalidateMode.onUserInteraction,
               autofocus: true,
               focusNode: _emailFocusNode,
-              textInputAction: TextInputAction.next,
+              textInputAction: TextInputAction.done,
               validator: (value) {
                 if (value == null ||
                     value.isEmpty ||
@@ -113,92 +144,51 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 label: Text("Enter your email"),
               ),
               controller: _emailController,
-              onFieldSubmitted: (_) {},
-            ),
-            SizedBox(height: 16),
-            TextFormField(
-              autofillHints: [AutofillHints.password],
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              textInputAction: TextInputAction.done,
-              validator: widget.passwordValidator ??
-                  (value) {
-                    if (value == null || value.isEmpty || value.length < 6) {
-                      return "Please enter a password that is at least 6 characters long";
-                    }
-                    return null;
-                  },
-              decoration: InputDecoration(
-                prefixIcon: widget.prefixIconPassword,
-                label: Text("Enter your password"),
-              ),
-              obscureText: true,
-              controller: _passwordController,
               onFieldSubmitted: (_) {
-                _signInSignUp();
+                _passwordRecovery();
               },
             ),
             SizedBox(height: 16),
             ElevatedButton(
-              onPressed: _signInSignUp,
-              child: (_isLoading)
-                  ? SizedBox(
-                      height: 16,
-                      width: 16,
-                      child: CircularProgressIndicator(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        strokeWidth: 1.5,
-                      ),
-                    )
-                  : Text("Sign In"),
+              onPressed: _passwordRecovery,
+              child: Text("Send password reset email"),
             ),
             SizedBox(height: 16),
             TextButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ForgetPasswordPage(),
-                ),
-              ),
-              child: Text("Forgot your password?"),
+              onPressed: () => Navigator.pop(context),
+              child: Text("Back to sign in"),
             ),
+            SizedBox(height: 16),
           ],
         ),
       ),
     );
   }
 
-  void _signInSignUp() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-    setState(() {
-      _isLoading = true;
-    });
+  void _passwordRecovery() async {
     try {
-      final response = await supabase.auth.signInWithPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
+      if (!_formKey.currentState!.validate()) {
+        // Focus on email field if validation fails
+        _emailFocusNode.requestFocus();
+        return;
+      }
+
+      final email = _emailController.text.trim();
+      await supabase.auth.resetPasswordForEmail(
+        email,
+        // redirectTo: widget.resetPasswordRedirectTo ?? widget.redirectTo,
       );
-      widget.onSignInComplete.call(response);
-    } on AuthException catch (error) {
-      if (widget.onError == null && mounted) {
-        context.showErrorSnackBar(error.message);
-      } else {
-        widget.onError?.call(error);
-      }
-      _emailFocusNode.requestFocus();
-    } catch (error) {
-      if (widget.onError == null && mounted) {
-        context.showErrorSnackBar("An unexpected error occurred: $error");
-      } else {
-        widget.onError?.call(error);
-      }
-      _emailFocusNode.requestFocus();
-    }
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
+      widget.onPasswordResetEmailSent?.call();
+      // FIX use_build_context_synchronously
+      if (!mounted) return;
+      context.showSnackBar("Password reset email has been sent");
+      Future.delayed(Durations.extralong4, () {
+        if (mounted) Navigator.pop(context);
       });
-    }
+    } on AuthException catch (error) {
+      widget.onError?.call(error);
+    } catch (error) {
+      widget.onError?.call(error);
+    } finally {}
   }
 }

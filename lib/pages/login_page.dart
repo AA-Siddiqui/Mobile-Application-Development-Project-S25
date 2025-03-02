@@ -15,9 +15,19 @@ class LoginPage extends StatelessWidget {
           padding: EdgeInsets.all(16),
           width: MediaQuery.sizeOf(context).width * 0.8,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Sample Title"),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 36),
+                child: Text(
+                  "UMS",
+                  style: TextStyle(
+                    fontSize: 36,
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
               Builder(builder: (context) {
                 return SupaEmailAuth(
                   // redirectTo: kIsWeb ? null : 'io.mydomain.myapp://callback',
