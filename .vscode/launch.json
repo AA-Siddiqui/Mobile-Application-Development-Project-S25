@@ -32,6 +32,11 @@
         "--dart-define-from-file",
         ".env"
       ]
+    },
+    {
+      "name": "Attach",
+      "request": "attach",
+      "type": "dart",
     }
   ]
 }

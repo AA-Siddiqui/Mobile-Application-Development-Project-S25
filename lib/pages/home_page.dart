@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:project/controllers/auth_controller.dart';
 import 'package:project/pages/profile_page.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final AuthController authController = Get.find<AuthController>();
+  HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,22 +16,15 @@ class HomePage extends StatelessWidget {
           children: [
             ListTile(
               title: Text("Profile"),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProfilePage(),
-                ),
-              ),
+              onTap: () => Get.to(ProfilePage()),
             )
           ],
         ),
       ),
       body: Center(
-        child: TextButton(
-          onPressed: () async {
-            await Supabase.instance.client.auth.signOut();
-          },
-          child: Text("LOL"),
+        child: IconButton(
+          icon: const Icon(Icons.logout),
+          onPressed: authController.signOut,
         ),
       ),
     );
