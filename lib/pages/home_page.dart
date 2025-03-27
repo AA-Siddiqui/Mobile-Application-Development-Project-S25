@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project/controllers/auth_controller.dart';
 import 'package:project/pages/profile_page.dart';
-import 'package:project/utils/show_snack_bar.dart';
+import 'package:project/utils/toast.dart';
 
 class HomePage extends StatelessWidget {
   final AuthController authController = Get.find<AuthController>();
@@ -69,9 +69,21 @@ class HomePage extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: () {
-                    Get.showSnackbar(SnackBarTemplate.error("LOL", "LOLOL"));
+                    showInfoToast(
+                      "Info",
+                      "Info message",
+                    );
                   },
-                  child: Text("LOL"),
+                  child: Text("SnackBar Info"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    showErrorToast(
+                      "Error",
+                      "Error message",
+                    );
+                  },
+                  child: Text("SnackBar Error"),
                 ),
                 IconButton(
                   icon: const Icon(Icons.logout),
