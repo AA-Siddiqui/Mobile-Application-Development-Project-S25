@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:project/utils/email_validator.dart';
 import 'package:project/utils/show_snack_bar.dart';
 import 'dart:core';
@@ -155,7 +156,9 @@ class _SupaEmailAuthState extends State<SupaForgetAuth> {
             ),
             SizedBox(height: 16),
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                Get.off(Get.currentRoute);
+              },
               child: Text("Back to sign in"),
             ),
             SizedBox(height: 16),
@@ -181,9 +184,12 @@ class _SupaEmailAuthState extends State<SupaForgetAuth> {
       widget.onPasswordResetEmailSent?.call();
       // FIX use_build_context_synchronously
       if (!mounted) return;
-      context.showSnackBar("Password reset email has been sent");
+      Get.showSnackbar(SnackBarTemplate.info(
+        "Email Sent!",
+        "Password reset email has been sent",
+      ));
       Future.delayed(Durations.extralong4, () {
-        if (mounted) Navigator.pop(context);
+        Get.off(Get.currentRoute);
       });
     } on AuthException catch (error) {
       widget.onError?.call(error);

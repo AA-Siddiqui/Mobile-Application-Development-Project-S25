@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   get: ^4.7.2
+  sqflite: ^2.4.1
   supabase_flutter: ^2.8.3
 
 dev_dependencies:

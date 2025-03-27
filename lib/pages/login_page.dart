@@ -32,40 +32,26 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
               ),
-              // Builder(builder: (context) {
-              //   return SupaEmailAuth(
-              //     // redirectTo: kIsWeb ? null : 'io.mydomain.myapp://callback',
-              //     onSignInComplete: (response) {
-              //       if (response.session != null) {
-              //         Navigator.of(context).pushReplacement(
-              //           MaterialPageRoute(
-              //             builder: (context) => HomePage(),
-              //           ),
-              //         );
-              //       }
-              //     },
-              //   );
-              // }),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextField(
-                      controller: emailController,
-                      decoration: const InputDecoration(labelText: "Email")),
+                    controller: emailController,
+                    decoration: const InputDecoration(labelText: "Email"),
+                  ),
+                  const SizedBox(height: 20),
                   TextField(
-                      controller: passwordController,
-                      obscureText: true,
-                      decoration: const InputDecoration(labelText: "Password")),
+                    controller: passwordController,
+                    obscureText: true,
+                    decoration: const InputDecoration(labelText: "Password"),
+                  ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () => authController.signIn(
-                        emailController.text, passwordController.text),
+                      emailController.text,
+                      passwordController.text,
+                    ),
                     child: const Text("Login"),
-                  ),
-                  TextButton(
-                    onPressed: () => authController.signUp(
-                        emailController.text, passwordController.text),
-                    child: const Text("Sign Up"),
                   ),
                 ],
               )

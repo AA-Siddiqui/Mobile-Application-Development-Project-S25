@@ -1,36 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-extension ShowSnackBar on BuildContext {
+extension SnackBarTemplate on GetSnackBar {
   /// Displays a basic snackbar
-  void showSnackBar(
+  static GetSnackBar info(
+    String title,
     String message, {
-    Color? textColor,
-    Color? backgroundColor,
     String? actionLabel,
   }) {
-    ScaffoldMessenger.of(this).showSnackBar(SnackBar(
-      content: Text(
-        message,
-        style: textColor == null ? null : TextStyle(color: textColor),
-      ),
-      backgroundColor: backgroundColor,
-      action: SnackBarAction(
-        label: actionLabel ?? 'ok',
-        onPressed: () {},
-      ),
-    ));
+    return GetSnackBar(
+      title: title,
+      message: message,
+      backgroundColor: Get.theme.colorScheme.primaryContainer,
+      snackStyle: SnackStyle.FLOATING,
+      snackPosition: SnackPosition.TOP,
+      duration: Duration(seconds: 3),
+      maxWidth: Get.size.width * 0.8,
+      borderRadius: 8,
+      dismissDirection: DismissDirection.horizontal,
+    );
   }
 
   /// Displays a red snackbar indicating error
-  void showErrorSnackBar(
+  static GetSnackBar error(
+    String title,
     String message, {
     String? actionLabel,
   }) {
-    showSnackBar(
-      message,
-      textColor: Theme.of(this).colorScheme.onErrorContainer,
-      backgroundColor: Theme.of(this).colorScheme.errorContainer,
-      actionLabel: actionLabel,
+    return GetSnackBar(
+      title: title,
+      message: message,
+      backgroundColor: Get.theme.colorScheme.errorContainer,
+      snackStyle: SnackStyle.FLOATING,
+      snackPosition: SnackPosition.TOP,
+      duration: Duration(seconds: 3),
+      maxWidth: Get.size.width * 0.8,
+      borderRadius: 8,
+      dismissDirection: DismissDirection.horizontal,
     );
   }
 }
