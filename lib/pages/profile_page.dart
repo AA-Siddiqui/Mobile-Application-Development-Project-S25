@@ -42,7 +42,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(
-        () => controller.isLoading.value
+        () => controller.isLoading
             ? Center(child: CircularProgressIndicator())
             : SafeArea(
                 child: Stack(

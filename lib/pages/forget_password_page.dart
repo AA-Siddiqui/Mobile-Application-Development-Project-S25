@@ -184,7 +184,7 @@ class _SupaEmailAuthState extends State<SupaForgetAuth> {
       widget.onPasswordResetEmailSent?.call();
       // FIX use_build_context_synchronously
       if (!mounted) return;
-      showInfoToast(
+      Toast.info(
         "Email Sent!",
         "Password reset email has been sent",
       );

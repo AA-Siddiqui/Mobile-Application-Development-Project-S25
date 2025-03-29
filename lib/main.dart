@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/controllers/auth_controller.dart';
-import 'package:project/pages/home_page.dart';
+import 'package:project/pages/student_home_page.dart';
 import 'package:project/pages/login_page.dart';
 import 'package:project/theme.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -42,7 +42,26 @@ class AuthChecker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => authController.isAuthenticated.value ? HomePage() : LoginPage(),
+      () => authController.isAuthenticated
+          ? [
+              Scaffold(
+                body: Center(
+                  child: Text("Something went wrong!"),
+                ),
+              ),
+              StudentHomePage(),
+              Scaffold(
+                body: Center(
+                  child: Text("Teacher Page"),
+                ),
+              ),
+              Scaffold(
+                body: Center(
+                  child: Text("Admin Page"),
+                ),
+              ),
+            ][authController.role]
+          : LoginPage(),
     );
   }
 }

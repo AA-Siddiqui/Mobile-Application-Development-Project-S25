@@ -4,21 +4,30 @@ import 'package:project/controllers/auth_controller.dart';
 import 'package:project/pages/profile_page.dart';
 import 'package:project/utils/toast.dart';
 
-class HomePage extends StatelessWidget {
+class StudentHomePage extends StatelessWidget {
   final AuthController authController = Get.find<AuthController>();
-  HomePage({super.key});
+  StudentHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       drawer: Drawer(
-        child: ListView(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
           children: [
-            ListTile(
-              title: Text("Profile"),
-              onTap: () => Get.to(() => ProfilePage()),
-            )
+            Expanded(
+              child: ListView(
+                children: [
+                  DrawerHeader(child: Container()),
+                  ListTile(
+                    title: Text("Profile"),
+                    onTap: () => Get.to(() => ProfilePage()),
+                  )
+                ],
+              ),
+            ),
+            ListTile(title: Text("Made by someone")),
           ],
         ),
       ),
@@ -69,7 +78,7 @@ class HomePage extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: () {
-                    showInfoToast(
+                    Toast.info(
                       "Info",
                       "Info message",
                     );
@@ -78,7 +87,7 @@ class HomePage extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    showErrorToast(
+                    Toast.error(
                       "Error",
                       "Error message",
                     );

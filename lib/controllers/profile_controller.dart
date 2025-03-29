@@ -4,8 +4,13 @@ import '../models/profile_model.dart';
 import '../utils/db_helper.dart';
 
 class ProfileController extends GetxController {
-  var isLoading = false.obs;
-  var profile = Rxn<ProfileModel>();
+  var isLoadingRx = false.obs;
+  bool get isLoading => isLoadingRx.value;
+  set isLoading(bool value) => isLoadingRx.value = value;
+
+  var profileRx = Rxn<ProfileModel>();
+  ProfileModel? get profile => profileRx.value;
+  set profile(ProfileModel? value) => profileRx.value = value;
 
   @override
   void onInit() {
@@ -15,10 +20,10 @@ class ProfileController extends GetxController {
 
   void fetchProfileData() async {
     // Fetch from local database
-    isLoading.value = true;
+    isLoading = true;
     final localData = await DBHelper().fetchProfile();
     if (localData != null) {
-      profile.value = ProfileModel(
+      profile = ProfileModel(
         name: localData['name'],
         dob: localData['dob'],
         address: localData['address'],
@@ -27,15 +32,15 @@ class ProfileController extends GetxController {
         rollNo: localData['rollNo'],
         program: localData['program'],
       );
-      isLoading.value = false;
+      isLoading = false;
     } else {
-      isLoading.value = true;
+      isLoading = true;
     }
 
     // Fetch from server
     User? user = Supabase.instance.client.auth.currentUser;
     if (user == null) {
-      isLoading.value = false;
+      isLoading = false;
       return;
     }
 
@@ -48,8 +53,7 @@ class ProfileController extends GetxController {
         .eq("id", id)
         .single();
 
-    profile.value =
-        ProfileModel.fromJson({...userResponse, "email": user.email});
+    profile = ProfileModel.fromJson({...userResponse, "email": user.email});
 
     Map<String, dynamic> flattenedResponse = {
       "name": userResponse["name"],
@@ -66,7 +70,7 @@ class ProfileController extends GetxController {
     await DBHelper().clearProfile();
     await DBHelper().insertProfile(flattenedResponse);
 
-    isLoading.value = false;
+    isLoading = false;
   }
 
   String formatDate(String dateString) {
@@ -90,12 +94,11 @@ class ProfileController extends GetxController {
     ][month - 1]} ${day.toString().padLeft(2, '0')}, $year";
   }
 
-  String? get name => profile.value?.name;
-  String? get dob =>
-      profile.value?.dob != null ? formatDate(profile.value!.dob) : null;
-  String? get address => profile.value?.address;
-  String? get department => profile.value?.department;
-  String? get rollNo => profile.value?.rollNo;
-  String? get program => profile.value?.program;
-  String? get email => profile.value?.email;
+  String? get name => profile?.name;
+  String? get dob => profile?.dob != null ? formatDate(profile!.dob) : null;
+  String? get address => profile?.address;
+  String? get department => profile?.department;
+  String? get rollNo => profile?.rollNo;
+  String? get program => profile?.program;
+  String? get email => profile?.email;
 }
