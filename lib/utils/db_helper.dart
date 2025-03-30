@@ -1,3 +1,4 @@
+import 'package:project/db/profile_actions.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -8,7 +9,7 @@ class DBHelper {
 
   Database? _database;
 
-  Future<Database> get database async {
+  Future<Database> get db async {
     if (_database != null) return _database!;
     _database = await _initDB();
     return _database!;
@@ -20,36 +21,10 @@ class DBHelper {
       path,
       version: 1,
       onCreate: (db, version) async {
-        await db.execute('''
-          CREATE TABLE Profile(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT,
-            dob TEXT,
-            address TEXT,
-            department TEXT,
-            rollNo TEXT,
-            program TEXT,
-            email TEXT UNIQUE
-          )
-        ''');
+        profile.createTable(db);
       },
     );
   }
 
-  Future<void> insertProfile(Map<String, dynamic> profile) async {
-    final db = await database;
-    await db.insert('Profile', profile,
-        conflictAlgorithm: ConflictAlgorithm.replace);
-  }
-
-  Future<Map<String, dynamic>?> fetchProfile() async {
-    final db = await database;
-    final result = await db.query('Profile', limit: 1);
-    return result.isNotEmpty ? result.first : null;
-  }
-
-  Future<void> clearProfile() async {
-    final db = await database;
-    await db.delete('Profile');
-  }
+  static ProfileActions get profile => ProfileActions();
 }

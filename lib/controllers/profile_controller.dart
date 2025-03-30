@@ -21,7 +21,7 @@ class ProfileController extends GetxController {
   void fetchProfileData() async {
     // Fetch from local database
     isLoading = true;
-    final localData = await DBHelper().fetchProfile();
+    final localData = await DBHelper.profile.fetchProfile();
     if (localData != null) {
       profile = ProfileModel(
         name: localData['name'],
@@ -67,8 +67,8 @@ class ProfileController extends GetxController {
     };
 
     // Update local database
-    await DBHelper().clearProfile();
-    await DBHelper().insertProfile(flattenedResponse);
+    await DBHelper.profile.clearProfile();
+    await DBHelper.profile.insertProfile(flattenedResponse);
 
     isLoading = false;
   }

@@ -18,22 +18,23 @@ class AuthController extends GetxController {
     super.onInit();
     _supabase.auth.onAuthStateChange.listen((data) async {
       isAuthenticated = _supabase.auth.currentSession != null;
-      _supabase
+      final roleResponse = await _supabase
           .from("User")
           .select("role")
           .eq("id", _supabase.auth.currentUser?.id ?? "")
-          .maybeSingle()
-          .then((value) {
-        if (value == null) {
-          Toast.error("Role Error", "Role not found!");
-          role = 0;
-          return;
-        }
-        role = value["role"];
-        Toast.info("Role", role.toString());
-      }).catchError((error) {
-        error("Error", "Role Error");
-      });
+          .maybeSingle();
+      role = roleResponse?["role"] ?? 0;
+      //       .then((value) {
+      //     if (value == null) {
+      //       Toast.error("Role Error", "Role not found!");
+      //       role = 0;
+      //       return;
+      //     }
+      //     role = value["role"];
+      //     Toast.info("Role", role.toString());
+      //   }).catchError((error) {
+      //     error("Error", "Role Error");
+      //   });
     });
   }
 

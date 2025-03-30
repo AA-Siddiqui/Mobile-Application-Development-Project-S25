@@ -46,7 +46,7 @@ class AuthChecker extends StatelessWidget {
           ? [
               Scaffold(
                 body: Center(
-                  child: Text("Something went wrong!"),
+                  child: CircularProgressIndicator(),
                 ),
               ),
               StudentHomePage(),

@@ -11,7 +11,17 @@ class StudentHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () => Get.changeThemeMode(
+                Get.theme.brightness == Brightness.light
+                    ? ThemeMode.dark
+                    : ThemeMode.light),
+            icon: Icon(Icons.brightness_5_sharp),
+          ),
+        ],
+      ),
       drawer: Drawer(
         child: Column(
           mainAxisSize: MainAxisSize.max,
