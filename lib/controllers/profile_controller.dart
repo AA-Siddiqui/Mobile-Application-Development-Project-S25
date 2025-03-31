@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:project/service/supabase_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/profile_model.dart';
 import '../utils/db_helper.dart';
@@ -38,20 +39,13 @@ class ProfileController extends GetxController {
     }
 
     // Fetch from server
-    User? user = Supabase.instance.client.auth.currentUser;
+    User? user = SupabaseService.user.user;
     if (user == null) {
       isLoading = false;
       return;
     }
 
-    String? id = user.id;
-
-    final userResponse = await Supabase.instance.client
-        .from("User")
-        .select(
-            "name, dob, address, Department(name), Student(rollNo, Program(name, level))")
-        .eq("id", id)
-        .single();
+    final userResponse = await SupabaseService.user.getProfilePageData();
 
     profile = ProfileModel.fromJson({...userResponse, "email": user.email});
 

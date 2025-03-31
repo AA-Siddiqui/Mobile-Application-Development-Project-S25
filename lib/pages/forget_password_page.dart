@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:project/service/supabase_service.dart';
 import 'package:project/utils/email_validator.dart';
 import 'package:project/utils/toast.dart';
 import 'dart:core';
@@ -103,8 +104,6 @@ class _SupaEmailAuthState extends State<SupaForgetAuth> {
   /// Focus node for email field
   final FocusNode _emailFocusNode = FocusNode();
 
-  final supabase = Supabase.instance.client;
-
   @override
   void initState() {
     super.initState();
@@ -177,13 +176,8 @@ class _SupaEmailAuthState extends State<SupaForgetAuth> {
       }
 
       final email = _emailController.text.trim();
-      await supabase.auth.resetPasswordForEmail(
-        email,
-        // redirectTo: widget.resetPasswordRedirectTo ?? widget.redirectTo,
-      );
+      SupabaseService.user.resetPassword(email);
       widget.onPasswordResetEmailSent?.call();
-      // FIX use_build_context_synchronously
-      if (!mounted) return;
       Toast.info(
         "Email Sent!",
         "Password reset email has been sent",
