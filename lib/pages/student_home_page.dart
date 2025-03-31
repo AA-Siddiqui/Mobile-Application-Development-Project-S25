@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project/controllers/auth_controller.dart';
 import 'package:project/pages/profile_page.dart';
-import 'package:project/utils/toast.dart';
 
 class StudentHomePage extends StatelessWidget {
   final AuthController authController = Get.find<AuthController>();
@@ -20,6 +19,10 @@ class StudentHomePage extends StatelessWidget {
                     : ThemeMode.light),
             icon: Icon(Icons.brightness_5_sharp),
           ),
+          IconButton(
+            onPressed: () => Get.off(StudentHomePage()),
+            icon: Icon(Icons.refresh),
+          ),
         ],
       ),
       drawer: Drawer(
@@ -29,86 +32,67 @@ class StudentHomePage extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: [
-                  DrawerHeader(child: Container()),
+                  DrawerHeader(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "UMS",
+                        style: TextStyle(
+                          fontSize: 72,
+                          color: Get.theme.colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
                   ListTile(
                     title: Text("Profile"),
+                    leading: Icon(Icons.person),
                     onTap: () => Get.to(() => ProfilePage()),
-                  )
+                  ),
                 ],
               ),
             ),
-            ListTile(title: Text("Made by someone")),
+            SafeArea(child: ListTile(title: Text("Made by someone"))),
           ],
         ),
       ),
-      body: PageView(
+      body: Column(
         children: [
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Get.theme.colorScheme.tertiaryContainer,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Column(
-                        children: List.generate(
-                          3,
-                          (index) => Text("Item $index"),
-                        ),
-                      ),
-                      Column(
-                        children: List.generate(
-                          3,
-                          (index) => Text("Item $index"),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Get.theme.colorScheme.tertiaryContainer,
+                borderRadius: BorderRadius.circular(8),
               ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: 20,
-                  itemBuilder: (context, index) => ListTile(
-                    title: Text("Item $index"),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Column(
+                    children: List.generate(
+                      3,
+                      (index) => Text("Item $index"),
+                    ),
                   ),
-                ),
+                  Column(
+                    children: List.generate(
+                      3,
+                      (index) => Text("Item $index"),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-          Center(
-            child: Column(
-              children: [
-                TextButton(
-                  onPressed: () {
-                    Toast.info(
-                      "Info",
-                      "Info message",
-                    );
-                  },
-                  child: Text("SnackBar Info"),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Toast.error(
-                      "Error",
-                      "Error message",
-                    );
-                  },
-                  child: Text("SnackBar Error"),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.logout),
-                  onPressed: authController.signOut,
-                ),
-              ],
+          Expanded(
+            child: ListView.builder(
+              itemCount: 20,
+              itemBuilder: (context, index) => ListTile(
+                title: Text("Item $index"),
+              ),
             ),
           ),
         ],
