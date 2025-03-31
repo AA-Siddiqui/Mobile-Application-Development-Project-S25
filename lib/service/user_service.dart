@@ -1,11 +1,15 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UserService {
-  static get _supabase => Supabase.instance.client;
-  static Session? get session => _supabase.auth.currentSession;
-  static User? get user => _supabase.auth.currentUser;
+  static final UserService _instance = UserService._internal();
+  factory UserService() => _instance;
+  UserService._internal();
 
-  static Future<Map> getProfilePageData() async {
+  SupabaseClient get _supabase => Supabase.instance.client;
+  Session? get session => _supabase.auth.currentSession;
+  User? get user => _supabase.auth.currentUser;
+
+  Future<Map<String, dynamic>> getProfilePageData() async {
     return await Supabase.instance.client
         .from("User")
         .select(
@@ -14,17 +18,17 @@ class UserService {
         .single();
   }
 
-  static void resetPassword(String email) async {
+  void resetPassword(String email) async {
     await _supabase.auth.resetPasswordForEmail(
       email,
     );
   }
 
-  static void subscribeToAuthState(void Function(AuthState) callback) {
+  void subscribeToAuthState(void Function(AuthState) callback) {
     _supabase.auth.onAuthStateChange.listen(callback);
   }
 
-  static Future<Map?> getRole() async {
+  Future<Map<String, dynamic>?> getRole() async {
     return await _supabase
         .from("User")
         .select("role")
@@ -32,15 +36,15 @@ class UserService {
         .maybeSingle();
   }
 
-  static Future<void> signUp(String email, String password) async {
+  Future<void> signUp(String email, String password) async {
     await _supabase.auth.signUp(email: email, password: password);
   }
 
-  static Future<void> signIn(String email, String password) async {
+  Future<void> signIn(String email, String password) async {
     await _supabase.auth.signInWithPassword(email: email, password: password);
   }
 
-  static Future<void> signOut() async {
+  Future<void> signOut() async {
     await _supabase.auth.signOut();
   }
 }
