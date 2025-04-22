@@ -46,12 +46,16 @@ class LoginPage extends StatelessWidget {
                     decoration: const InputDecoration(labelText: "Password"),
                   ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () => authController.signIn(
-                      emailController.text,
-                      passwordController.text,
-                    ),
-                    child: const Text("Login"),
+                  Obx(
+                    () => authController.isLoading
+                        ? CircularProgressIndicator()
+                        : ElevatedButton(
+                            onPressed: () => authController.signIn(
+                              emailController.text,
+                              passwordController.text,
+                            ),
+                            child: const Text("Login"),
+                          ),
                   ),
                 ],
               )

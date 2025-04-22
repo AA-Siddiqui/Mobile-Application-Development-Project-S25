@@ -7,6 +7,10 @@ class AuthController extends GetxController {
   bool get isAuthenticated => isAuthenticatedRx.value;
   set isAuthenticated(bool value) => isAuthenticatedRx.value = value;
 
+  var isLoadingRx = false.obs;
+  bool get isLoading => isLoadingRx.value;
+  set isLoading(bool value) => isLoadingRx.value = value;
+
   var roleRx = 0.obs;
   int get role => roleRx.value;
   set role(int value) => roleRx.value = value;
@@ -16,8 +20,10 @@ class AuthController extends GetxController {
     super.onInit();
     SupabaseService.user.subscribeToAuthState((data) async {
       isAuthenticated = SupabaseService.user.session != null;
-      final roleResponse = await SupabaseService.user.getRole();
-      role = roleResponse?["role"] ?? 0;
+      if (isAuthenticated) {
+        final roleResponse = await SupabaseService.user.getRole();
+        role = roleResponse?["role"] ?? 0;
+      }
     });
   }
 
@@ -32,9 +38,12 @@ class AuthController extends GetxController {
 
   Future<void> signIn(String email, String password) async {
     try {
+      isLoading = true;
       await SupabaseService.user.signIn(email, password);
     } catch (e) {
       Toast.error("Error", e.toString());
+    } finally {
+      isLoading = false;
     }
   }
 
