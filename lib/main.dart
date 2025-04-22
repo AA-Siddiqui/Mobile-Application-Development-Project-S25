@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project/controllers/auth_controller.dart';
 import 'package:project/pages/splash_page.dart';
 import 'package:project/theme.dart';
+import 'package:project/utils/auth_checker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:get/get.dart';
 
@@ -28,7 +29,21 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      home: SplashPage(),
+      home: FutureBuilder(
+        future: Future.delayed(
+          const Duration(seconds: 3),
+          () {
+            return true;
+          },
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data == true) {
+            return AuthChecker();
+          } else {
+            return const SplashPage();
+          }
+        },
+      ),
     );
   }
 }

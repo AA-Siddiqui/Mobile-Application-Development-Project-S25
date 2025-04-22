@@ -19,6 +19,7 @@ class AuthController extends GetxController {
   void onInit() {
     super.onInit();
     SupabaseService.user.subscribeToAuthState((data) async {
+      print(data);
       isAuthenticated = SupabaseService.user.session != null;
       if (isAuthenticated) {
         final roleResponse = await SupabaseService.user.getRole();
