@@ -57,6 +57,10 @@ class LoginPage extends StatelessWidget {
                             child: const Text("Login"),
                           ),
                   ),
+                  ElevatedButton(
+                    onPressed: () => authController.isRegistered = false,
+                    child: const Text("Sign Up"),
+                  ),
                 ],
               )
             ],

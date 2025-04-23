@@ -11,6 +11,10 @@ class AuthController extends GetxController {
   bool get isLoading => isLoadingRx.value;
   set isLoading(bool value) => isLoadingRx.value = value;
 
+  var isRegisteredRx = true.obs;
+  bool get isRegistered => isRegisteredRx.value;
+  set isRegistered(bool value) => isRegisteredRx.value = value;
+
   var roleRx = 0.obs;
   int get role => roleRx.value;
   set role(int value) => roleRx.value = value;
@@ -19,7 +23,6 @@ class AuthController extends GetxController {
   void onInit() {
     super.onInit();
     SupabaseService.user.subscribeToAuthState((data) async {
-      print(data);
       isAuthenticated = SupabaseService.user.session != null;
       if (isAuthenticated) {
         final roleResponse = await SupabaseService.user.getRole();
@@ -28,12 +31,23 @@ class AuthController extends GetxController {
     });
   }
 
-  Future<void> signUp(String email, String password) async {
+  Future<void> signUp(
+    String email,
+    String password, [
+    String? address,
+    DateTime? date,
+    String? department,
+    String? program,
+  ]) async {
     try {
+      // TODO: Add the additional parameters to the sign-up method
+      isLoading = true;
       await SupabaseService.user.signUp(email, password);
       Toast.info("Success", "Account created! Please verify your email.");
     } catch (e) {
       Toast.error("Error", e.toString());
+    } finally {
+      isLoading = false;
     }
   }
 

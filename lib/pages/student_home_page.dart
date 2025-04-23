@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project/controllers/auth_controller.dart';
 import 'package:project/controllers/profile_controller.dart';
-import 'package:project/debug.dart';
 import 'package:project/pages/profile_page.dart';
 
 class StudentHomePage extends StatelessWidget {
@@ -53,6 +52,11 @@ class StudentHomePage extends StatelessWidget {
                     title: Text("Profile"),
                     leading: Icon(Icons.person),
                     onTap: () => Get.to(() => ProfilePage()),
+                  ),
+                  ListTile(
+                    title: Text("Logout"),
+                    leading: Icon(Icons.exit_to_app),
+                    onTap: authController.signOut,
                   ),
                 ],
               ),
@@ -151,7 +155,6 @@ class StudentHomePage extends StatelessWidget {
                 ),
               ),
             ),
-            Debug().toastTestsWidget,
           ],
         ),
       ),

@@ -10,7 +10,8 @@
       "type": "dart",
       "args": [
         "--dart-define-from-file",
-        ".env"
+        ".env",
+        "-v"
       ]
     },
     {
@@ -20,7 +21,8 @@
       "flutterMode": "profile",
       "args": [
         "--dart-define-from-file",
-        ".env"
+        ".env",
+        "-v"
       ]
     },
     {
@@ -30,7 +32,8 @@
       "flutterMode": "release",
       "args": [
         "--dart-define-from-file",
-        ".env"
+        ".env",
+        "-v"
       ]
     },
     {

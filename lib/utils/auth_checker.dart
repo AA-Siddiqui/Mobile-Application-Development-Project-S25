@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project/controllers/auth_controller.dart';
 import 'package:project/pages/login_page.dart';
+import 'package:project/pages/signup_page.dart';
 import 'package:project/pages/student_home_page.dart';
 
 class AuthChecker extends StatelessWidget {
@@ -31,7 +32,9 @@ class AuthChecker extends StatelessWidget {
                 ),
               ),
             ][authController.role]
-          : LoginPage(),
+          : authController.isRegistered
+              ? LoginPage()
+              : SignupPage(),
     );
   }
 }
