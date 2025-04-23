@@ -100,30 +100,39 @@ class StudentHomePage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Column(
-                      children: List.generate(
-                        3,
-                        (index) => Text(
-                          "Item $index",
-                          style: TextStyle(
-                            color: Get.theme.colorScheme.onPrimaryContainer,
-                          ),
-                        ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: CircleAvatar(
+                        radius: 32,
+                        backgroundColor: Get.theme.colorScheme.primary,
                       ),
                     ),
                     Column(
-                      children: List.generate(
-                        3,
-                        (index) => Text(
-                          "Item $index",
-                          style: TextStyle(
-                            color: Get.theme.colorScheme.onPrimaryContainer,
-                          ),
-                        ),
-                      ),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Obx(() => Text(
+                              profileController.rollNo ?? "Roll No",
+                              style: Get.theme.textTheme.bodyLarge?.copyWith(
+                                color: Get.theme.colorScheme.onPrimaryContainer,
+                              ),
+                            )),
+                        Obx(() => Text(
+                              "Department of ${profileController.department ?? "Department"}",
+                              style: Get.theme.textTheme.bodyMedium?.copyWith(
+                                color: Get.theme.colorScheme.onPrimaryContainer,
+                              ),
+                            )),
+                        Obx(() => Text(
+                              profileController.program ?? "Program",
+                              style: Get.theme.textTheme.bodySmall?.copyWith(
+                                color: Get.theme.colorScheme.onPrimaryContainer,
+                              ),
+                            )),
+                      ],
                     ),
                   ],
                 ),

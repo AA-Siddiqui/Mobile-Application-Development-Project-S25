@@ -31,15 +31,16 @@ class SignupPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: Text(
-                    "UMS",
-                    style: TextStyle(
-                      fontSize: 36,
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Image.asset("assets/logo.png"),
+                  // child: Text(
+                  //   "UMS",
+                  //   style: TextStyle(
+                  //     fontSize: 36,
+                  //     color: Theme.of(context).primaryColor,
+                  //     fontWeight: FontWeight.bold,
+                  //   ),
+                  // ),
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
