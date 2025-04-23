@@ -12,15 +12,15 @@ class AuthController extends GetxController {
   bool get isLoading => isLoadingRx.value;
   set isLoading(bool value) => isLoadingRx.value = value;
 
-  var isRegisteredRx = true.obs;
-  bool get isRegistered => isRegisteredRx.value;
-  set isRegistered(bool value) => isRegisteredRx.value = value;
+  var isRegisteringRx = true.obs;
+  bool get isRegistering => isRegisteringRx.value;
+  set isRegistering(bool value) => isRegisteringRx.value = value;
 
   var roleRx = 0.obs;
   int get role => roleRx.value;
   set role(int value) => roleRx.value = value;
 
-  var roleIdRx = 0.obs;
+  var roleIdRx = (-1).obs;
   int get roleId => roleIdRx.value;
   set roleId(int value) => roleIdRx.value = value;
 
@@ -51,16 +51,17 @@ class AuthController extends GetxController {
 
   Future<void> signUp(
     String email,
-    String password, [
-    String? address,
-    DateTime? date,
-    String? department,
-    String? program,
-  ]) async {
+    String password,
+    String address,
+    DateTime date,
+    String department,
+    String program,
+    String name,
+  ) async {
     try {
-      // TODO: Add the additional parameters to the sign-up method
       isLoading = true;
-      await SupabaseService.user.signUp(email, password);
+      await SupabaseService.user
+          .signUp(email, password, address, date, department, program, name);
       Toast.info("Success", "Account created! Please verify your email.");
     } catch (e) {
       Toast.error("Error", e.toString());

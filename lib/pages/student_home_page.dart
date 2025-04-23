@@ -143,41 +143,55 @@ class StudentHomePage extends StatelessWidget {
             ),
             SizedBox(
               height: 200,
-              child: Obx(() => ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: studentHomeController.classes.length,
-                    itemBuilder: (context, index) => Card(
-                      child: Container(
-                        width: 200,
-                        padding: EdgeInsets.all(8),
-                        color: Get.theme.colorScheme.primaryContainer,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+              child: Obx(() => studentHomeController.isLoading
+                  ? CircularProgressIndicator()
+                  : ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: studentHomeController.classes.length * 4,
+                      itemBuilder: (context, index) {
+                        index = 0;
+                        return Card(
+                          child: Container(
+                            width: 200,
+                            padding: EdgeInsets.all(8),
+                            color: Get.theme.colorScheme.primaryContainer,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  studentHomeController.classes[index]
-                                      ["courseName"],
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Get
-                                        .theme.colorScheme.onPrimaryContainer,
-                                  ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      studentHomeController.classes[index]
+                                          ["courseName"],
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Get.theme.colorScheme
+                                            .onPrimaryContainer,
+                                      ),
+                                    ),
+                                    Text(
+                                      studentHomeController.classes[index]
+                                          ["section"],
+                                      style: TextStyle(
+                                        color: Get.theme.colorScheme
+                                            .onPrimaryContainer,
+                                      ),
+                                    ),
+                                    Text(
+                                      studentHomeController.classes[index]
+                                          ["term"],
+                                      style: TextStyle(
+                                        color: Get.theme.colorScheme
+                                            .onPrimaryContainer,
+                                      ),
+                                    )
+                                  ],
                                 ),
                                 Text(
-                                  studentHomeController.classes[index]
-                                      ["section"],
-                                  style: TextStyle(
-                                    color: Get
-                                        .theme.colorScheme.onPrimaryContainer,
-                                  ),
-                                ),
-                                Text(
-                                  studentHomeController.classes[index]["term"],
+                                  "Taught by Mr. ${studentHomeController.classes[index]["teacherName"]}",
                                   style: TextStyle(
                                     color: Get
                                         .theme.colorScheme.onPrimaryContainer,
@@ -185,17 +199,9 @@ class StudentHomePage extends StatelessWidget {
                                 )
                               ],
                             ),
-                            Text(
-                              "Taught by Mr. ${studentHomeController.classes[index]["teacherName"]}",
-                              style: TextStyle(
-                                color: Get.theme.colorScheme.onPrimaryContainer,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  )),
+                          ),
+                        );
+                      })),
             ),
           ],
         ),

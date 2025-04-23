@@ -183,14 +183,18 @@ class SignupPage extends StatelessWidget {
                               ? CircularProgressIndicator()
                               : ElevatedButton(
                                   onPressed: () => authController.signUp(
-                                    emailController.text,
-                                    passwordController.text,
-                                  ),
+                                      emailController.text,
+                                      passwordController.text,
+                                      addressController.text,
+                                      DateTime.parse(dobController.text),
+                                      departmentController.text,
+                                      programController.text,
+                                      nameController.text),
                                   child: const Text("Sign Up"),
                                 ),
                         ),
                         ElevatedButton(
-                          onPressed: () => authController.isRegistered = true,
+                          onPressed: () => authController.isRegistering = true,
                           child: const Text("Already have an account? Login"),
                         ),
                       ],

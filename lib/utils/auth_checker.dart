@@ -32,7 +32,7 @@ class AuthChecker extends StatelessWidget {
                 ),
               ),
             ][authController.role]
-          : authController.isRegistered
+          : authController.isRegistering
               ? LoginPage()
               : SignupPage(),
     );

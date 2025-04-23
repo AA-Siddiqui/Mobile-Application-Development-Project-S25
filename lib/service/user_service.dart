@@ -51,8 +51,43 @@ class UserService {
         .eq("studentId", roleId);
   }
 
-  Future<void> signUp(String email, String password) async {
-    await _supabase.auth.signUp(email: email, password: password);
+  Future<void> signUp(
+    String email,
+    String password,
+    String address,
+    DateTime date,
+    String department,
+    String program,
+    String name,
+  ) async {
+    final signUpResponse =
+        await _supabase.auth.signUp(email: email, password: password);
+    if (signUpResponse.user != null) {
+      final departmentId = await _supabase
+          .from("Department")
+          .select("id")
+          .eq("name", department)
+          .single();
+      final programId = await _supabase
+          .from("Program")
+          .select("id")
+          .eq("name", program)
+          .single();
+      final userId = signUpResponse.user!.id;
+      await _supabase.from("User").insert({
+        "id": userId,
+        "name": name,
+        "address": address,
+        "dob": date.toIso8601String(),
+        "departmentId": departmentId["id"],
+        "role": 1,
+      });
+      await _supabase.from("Student").insert({
+        "userId": userId,
+        "rollNo": "SU92-BSSEM-F22-001",
+        "programId": programId["id"],
+      });
+    }
   }
 
   Future<void> signIn(String email, String password) async {

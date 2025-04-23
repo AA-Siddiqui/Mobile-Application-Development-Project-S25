@@ -3,7 +3,7 @@ import 'package:project/controllers/auth_controller.dart';
 import 'package:project/service/supabase_service.dart';
 
 class StudentHomeController extends GetxController {
-  final int _roleId = Get.find<AuthController>().roleId;
+  final authController = Get.find<AuthController>();
 
   /// TODO: Implement caching mechanism for classes
   /// This will be done by making a student_home_actions.dart and student_home_model.dart
@@ -14,6 +14,10 @@ class StudentHomeController extends GetxController {
   List get classes => classesRx.value;
   set classes(List value) => classesRx.value = value;
 
+  var isLoadingRx = false.obs;
+  bool get isLoading => isLoadingRx.value;
+  set isLoading(bool value) => isLoadingRx.value = value;
+
   @override
   void onInit() {
     super.onInit();
@@ -22,7 +26,13 @@ class StudentHomeController extends GetxController {
 
   void fetchClassData() async {
     // Fetch class data from the database
-    final classData = await SupabaseService.user.getClassDetails(_roleId);
+    isLoading = false;
+
+    while (authController.roleId == -1) {
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+    final classData =
+        await SupabaseService.user.getClassDetails(authController.roleId);
     classes = classData.map((data) {
       // {
       //   Class: {
@@ -46,6 +56,6 @@ class StudentHomeController extends GetxController {
         "section": data["section"],
       };
     }).toList();
-    print(classes);
+    isLoading = false;
   }
 }
