@@ -18,6 +18,10 @@ class DepartmentDialogController extends GetxController {
 
   var allDeps = [].obs;
 
+  /// TODO: Implement caching mechanism for departments and programs
+  /// This will be done by making a signup_actions.dart and signup_model.dart
+  /// file and registering the action in the DBHelper class.
+
   @override
   void onInit() {
     super.onInit();
