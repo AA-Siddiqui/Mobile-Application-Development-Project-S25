@@ -36,6 +36,21 @@ class UserService {
         .maybeSingle();
   }
 
+  Future<Map<String, dynamic>?> getStudentDetails() async {
+    return await _supabase
+        .from("Student")
+        .select("id")
+        .eq("userId", user?.id ?? "")
+        .maybeSingle();
+  }
+
+  Future<List<Map<String, dynamic>>> getClassDetails(int roleId) async {
+    return await _supabase
+        .from("Enrollment")
+        .select("Class(Course(name), Teacher(User(name)), term, section)")
+        .eq("studentId", roleId);
+  }
+
   Future<void> signUp(String email, String password) async {
     await _supabase.auth.signUp(email: email, password: password);
   }

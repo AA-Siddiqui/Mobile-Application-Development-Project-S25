@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:project/service/supabase_service.dart';
 import 'package:project/utils/toast.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthController extends GetxController {
   var isAuthenticatedRx = false.obs;
@@ -19,6 +20,10 @@ class AuthController extends GetxController {
   int get role => roleRx.value;
   set role(int value) => roleRx.value = value;
 
+  var roleIdRx = 0.obs;
+  int get roleId => roleIdRx.value;
+  set roleId(int value) => roleIdRx.value = value;
+
   @override
   void onInit() {
     super.onInit();
@@ -27,8 +32,21 @@ class AuthController extends GetxController {
       if (isAuthenticated) {
         final roleResponse = await SupabaseService.user.getRole();
         role = roleResponse?["role"] ?? 0;
+        _getRoleBasedDetails(role);
       }
     });
+  }
+
+  Future<void> _getRoleBasedDetails(int role) async {
+    switch (role) {
+      case 1:
+        // Student
+        final studentResponse = await SupabaseService.user.getStudentDetails();
+        if (studentResponse != null) {
+          roleId = studentResponse["id"];
+        }
+        break;
+    }
   }
 
   Future<void> signUp(
@@ -55,6 +73,14 @@ class AuthController extends GetxController {
     try {
       isLoading = true;
       await SupabaseService.user.signIn(email, password);
+    } on AuthException catch (e) {
+      if (e.message == "Invalid login credentials") {
+        Toast.error("Error", "Invalid email or password.");
+      } else if (e.message == "Email not confirmed") {
+        Toast.error("Error", "Please verify your email.");
+      } else {
+        Toast.error("Error", e.message);
+      }
     } catch (e) {
       Toast.error("Error", e.toString());
     } finally {
