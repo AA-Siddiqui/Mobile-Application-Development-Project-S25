@@ -8,6 +8,14 @@ class StudentCourseController extends GetxController {
 
   final pageController = PageController();
 
+  @override
+  void onInit() {
+    super.onInit();
+    pageController.addListener(() {
+      pageIndex = pageController.page!.round();
+    });
+  }
+
   void changePage(int pageNo) {
     pageController.animateToPage(
       pageNo,

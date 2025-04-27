@@ -14,9 +14,13 @@ class StudentCoursePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
-          ["Activities", "Attendance", "Results"][stateController.pageIndex],
-        ),
+        title: Obx(() => Text(
+              [
+                "Activities",
+                "Attendance",
+                "Results"
+              ][stateController.pageIndex],
+            )),
       ),
       bottomNavigationBar: Obx(
         () => BottomNavigationBar(
