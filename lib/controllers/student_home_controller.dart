@@ -9,10 +9,10 @@ class StudentHomeController extends GetxController {
   /// This will be done by making a student_home_actions.dart and student_home_model.dart
   /// file and registering the action in the DBHelper class.
 
-  var classesRx = [].obs;
+  var classesRx = <Map<String, dynamic>>[].obs;
   // ignore: invalid_use_of_protected_member
-  List get classes => classesRx.value;
-  set classes(List value) => classesRx.value = value;
+  List<Map<String, dynamic>> get classes => classesRx.value;
+  set classes(List<Map<String, dynamic>> value) => classesRx.value = value;
 
   var isLoadingRx = false.obs;
   bool get isLoading => isLoadingRx.value;
@@ -50,6 +50,7 @@ class StudentHomeController extends GetxController {
       // }
       data = data["Class"];
       return {
+        "id": data["id"],
         "courseName": data["Course"]["name"],
         "teacherName": data["Teacher"]["User"]["name"],
         "term": data["term"],

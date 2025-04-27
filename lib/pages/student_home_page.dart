@@ -4,6 +4,7 @@ import 'package:project/controllers/auth_controller.dart';
 import 'package:project/controllers/profile_controller.dart';
 import 'package:project/controllers/student_home_controller.dart';
 import 'package:project/pages/profile_page.dart';
+import 'package:project/pages/student_course_page.dart';
 
 class StudentHomePage extends StatelessWidget {
   final AuthController authController = Get.find<AuthController>();
@@ -147,57 +148,65 @@ class StudentHomePage extends StatelessWidget {
                   ? CircularProgressIndicator()
                   : ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: studentHomeController.classes.length * 4,
+                      itemCount: studentHomeController.classes.length,
                       itemBuilder: (context, index) {
-                        index = 0;
-                        return Card(
-                          child: Container(
-                            width: 200,
-                            padding: EdgeInsets.all(8),
-                            color: Get.theme.colorScheme.primaryContainer,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      studentHomeController.classes[index]
-                                          ["courseName"],
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Get.theme.colorScheme
-                                            .onPrimaryContainer,
+                        return GestureDetector(
+                          onTap: () => Get.to(
+                            () => StudentCoursePage(
+                              studentHomeController.classes[index],
+                            ),
+                          ),
+                          child: Card(
+                            child: Container(
+                              width: 200,
+                              padding: EdgeInsets.all(8),
+                              color: Get.theme.colorScheme.primaryContainer,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        studentHomeController.classes[index]
+                                            ["courseName"],
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Get.theme.colorScheme
+                                              .onPrimaryContainer,
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      studentHomeController.classes[index]
-                                          ["section"],
-                                      style: TextStyle(
-                                        color: Get.theme.colorScheme
-                                            .onPrimaryContainer,
+                                      Text(
+                                        studentHomeController.classes[index]
+                                            ["section"],
+                                        style: TextStyle(
+                                          color: Get.theme.colorScheme
+                                              .onPrimaryContainer,
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      studentHomeController.classes[index]
-                                          ["term"],
-                                      style: TextStyle(
-                                        color: Get.theme.colorScheme
-                                            .onPrimaryContainer,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                Text(
-                                  "Taught by Mr. ${studentHomeController.classes[index]["teacherName"]}",
-                                  style: TextStyle(
-                                    color: Get
-                                        .theme.colorScheme.onPrimaryContainer,
+                                      Text(
+                                        studentHomeController.classes[index]
+                                            ["term"],
+                                        style: TextStyle(
+                                          color: Get.theme.colorScheme
+                                              .onPrimaryContainer,
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                )
-                              ],
+                                  Text(
+                                    "Taught by Mr. ${studentHomeController.classes[index]["teacherName"]}",
+                                    style: TextStyle(
+                                      color: Get
+                                          .theme.colorScheme.onPrimaryContainer,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         );
