@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project/controllers/student_course_controller.dart';
 import 'package:project/widgets/student_course_activity_widget.dart';
+import 'package:project/widgets/student_course_attendance_widget.dart';
 
 class StudentCoursePage extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -14,13 +15,16 @@ class StudentCoursePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Obx(() => Text(
-              [
-                "Activities",
-                "Attendance",
-                "Results"
-              ][stateController.pageIndex],
-            )),
+        backgroundColor: Colors.transparent,
+        title: Obx(
+          () => Text(
+            ["Activities", "Attendance", "Results"][stateController.pageIndex],
+            style: Get.textTheme.headlineSmall!.copyWith(
+              color: Get.theme.colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
       ),
       bottomNavigationBar: Obx(
         () => BottomNavigationBar(
@@ -54,10 +58,7 @@ class StudentCoursePage extends StatelessWidget {
         controller: stateController.pageController,
         children: [
           StudentCourseActivityWidget(data),
-          Container(
-            color: Colors.blue,
-            child: Container(),
-          ),
+          StudentCourseAttendanceWidget(data),
           Container(
             color: Colors.green,
             child: Container(),

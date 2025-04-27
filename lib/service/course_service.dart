@@ -15,4 +15,11 @@ class CourseService {
         .select("id, title, description, deadline, max, weight, type")
         .eq('classId', classId);
   }
+
+  Future<List<Map<String, dynamic>>> getCourseAttendances(int classId) async {
+    return await Supabase.instance.client
+        .from("Attendance")
+        .select("present, Schedule(startTime, classId)")
+        .eq("Schedule.classId", classId);
+  }
 }
