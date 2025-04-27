@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:project/controllers/auth_controller.dart';
 import 'package:project/controllers/student_course_attendance_controller.dart';
 
 class StudentCourseAttendanceWidget extends StatelessWidget {
   final Map<String, dynamic> data;
   final stateController = Get.put(StudentCourseAttendanceController());
+  final authController = Get.find<AuthController>();
   StudentCourseAttendanceWidget(this.data, {super.key}) {
-    stateController.getCourseAttendances(data["id"]);
+    stateController.getCourseAttendances(
+      data["id"],
+      authController.roleId,
+    );
   }
 
   @override

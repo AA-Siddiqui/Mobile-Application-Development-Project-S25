@@ -16,10 +16,10 @@ class StudentCourseAttendanceController extends GetxController {
   bool get isLoading => isLoadingRx.value;
   set isLoading(bool value) => isLoadingRx.value = value;
 
-  Future<void> getCourseAttendances(int classId) async {
+  Future<void> getCourseAttendances(int classId, int studentId) async {
     isLoading = true;
     final unflattended =
-        await SupabaseService.course.getCourseAttendances(classId);
+        await SupabaseService.course.getCourseAttendances(classId, studentId);
     courseAttendances = unflattended.map((e) {
       return {
         "present": e["present"],

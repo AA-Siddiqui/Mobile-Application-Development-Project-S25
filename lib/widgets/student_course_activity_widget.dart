@@ -13,50 +13,16 @@ class StudentCourseActivityWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          margin: EdgeInsets.symmetric(vertical: 8),
-          padding: EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Get.theme.colorScheme.primaryContainer,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                data["courseName"],
-                style: Get.textTheme.titleLarge!.copyWith(
-                  color: Get.theme.colorScheme.primary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                data["teacherName"],
-                style: Get.textTheme.titleMedium!.copyWith(
-                  color: Get.theme.colorScheme.secondary,
-                ),
-              ),
-              Text(
-                data["section"],
-                style: Get.textTheme.titleSmall,
-              ),
-              Text(
-                data["term"],
-                style: Get.textTheme.titleSmall,
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Text(
-            "Activities",
-            style: Get.textTheme.headlineLarge!.copyWith(
-              color: Get.theme.colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.all(16),
+        //   child: Text(
+        //     "Activities",
+        //     style: Get.textTheme.headlineLarge!.copyWith(
+        //       color: Get.theme.colorScheme.primary,
+        //       fontWeight: FontWeight.bold,
+        //     ),
+        //   ),
+        // ),
         Expanded(
           child: Obx(
             () => stateController.isLoading
