@@ -14,6 +14,7 @@ dependencies:
   sqflite: ^2.4.1
   supabase_flutter: ^2.8.3
   path:
+  skeletonizer: ^1.4.3
 
 dev_dependencies:
   flutter_test:

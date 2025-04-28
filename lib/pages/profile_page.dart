@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project/controllers/profile_controller.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
@@ -42,66 +43,67 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(
-        () => controller.isLoading
-            ? Center(child: CircularProgressIndicator())
-            : SafeArea(
-                child: Stack(
-                  children: [
-                    Positioned(
-                      child: BackButton(),
-                    ),
-                    SizedBox(
-                      width: Get.size.width,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+        () => Skeletonizer(
+          enabled: controller.isLoading,
+          child: SafeArea(
+            child: Stack(
+              children: [
+                Positioned(
+                  child: BackButton(),
+                ),
+                SizedBox(
+                  width: Get.size.width,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
                           children: [
-                            Column(
-                              children: [
-                                CircleAvatar(
-                                  radius: 64,
-                                ),
-                                Text(
-                                  controller.name ?? "Name",
-                                  style: TextStyle(
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  "Department of ${controller.department ?? "Department"}",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ],
+                            CircleAvatar(
+                              radius: 64,
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Details",
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                _buildTile("Program", controller.program),
-                                _buildTile("Roll No", controller.rollNo),
-                                _buildTile("Email", controller.email),
-                                _buildTile("Address", controller.address),
-                                _buildTile("Date of Birth", controller.dob),
-                              ],
+                            Text(
+                              controller.name ?? "Name",
+                              style: TextStyle(
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              "Department of ${controller.department ?? "Department"}",
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
                             ),
                           ],
                         ),
-                      ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Details",
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            _buildTile("Program", controller.program),
+                            _buildTile("Roll No", controller.rollNo),
+                            _buildTile("Email", controller.email),
+                            _buildTile("Address", controller.address),
+                            _buildTile("Date of Birth", controller.dob),
+                          ],
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

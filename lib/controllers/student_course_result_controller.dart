@@ -34,7 +34,6 @@ class StudentCourseResultController extends GetxController {
             : 0,
       };
     }).toList();
-    print(courseResults);
     isLoading = false;
   }
 }

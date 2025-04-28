@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project/controllers/auth_controller.dart';
 import 'package:project/controllers/student_course_attendance_controller.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class StudentCourseAttendanceWidget extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -29,9 +30,9 @@ class StudentCourseAttendanceWidget extends StatelessWidget {
         //   ),
         // ),
         Expanded(
-          child: Obx(() => stateController.isLoading
-              ? Center(child: CircularProgressIndicator())
-              : ListView.builder(
+          child: Obx(() => Skeletonizer(
+                enabled: stateController.isLoading,
+                child: ListView.builder(
                   itemCount: stateController.courseAttendances.length,
                   itemBuilder: (context, index) {
                     return Container(
@@ -85,7 +86,8 @@ class StudentCourseAttendanceWidget extends StatelessWidget {
                       ),
                     );
                   },
-                )),
+                ),
+              )),
         ),
       ],
     );
