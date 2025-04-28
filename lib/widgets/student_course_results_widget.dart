@@ -84,7 +84,7 @@ class StudentCourseResultWidget extends StatelessWidget {
                                   Container(
                                     color: Get.theme.colorScheme.primary,
                                     width: 10,
-                                    height: 2,
+                                    height: 1,
                                   ),
                                   Text(
                                     (stateController.courseResults[index]["max"]
@@ -121,7 +121,7 @@ class StudentCourseResultWidget extends StatelessWidget {
                                   Container(
                                     color: Get.theme.colorScheme.primary,
                                     width: 10,
-                                    height: 2,
+                                    height: 1,
                                   ),
                                   Text(
                                     (stateController.courseResults[index]

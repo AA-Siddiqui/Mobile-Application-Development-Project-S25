@@ -37,4 +37,79 @@ class CourseService {
         .eq("classId", classId)
         .filter("Submission.studentId", "eq", studentId);
   }
+
+  Future<int> getTotalClasses(int classId) async {
+    return (await _supabase
+            .from('Schedule')
+            .select('count')
+            .eq('classId', classId)
+            .lt('endTime', DateTime.now())
+            .count(CountOption.exact))
+        .count;
+  }
+
+  Future<int> getAttendedClasses(int classId, int studentId) async {
+    return (await _supabase
+            .from('Attendance')
+            .select('*, Schedule(classId)')
+            .eq('Schedule.classId', classId)
+            .eq('present', true)
+            .filter("studentId", "eq", studentId)
+            .count(CountOption.exact))
+        .count;
+  }
+
+  Future<int> getObtainedMarks(int classId, int studentId) async {
+    final res = (await _supabase
+        .from('Assessment')
+        .select('Submission(marks)')
+        .eq('classId', classId)
+        .eq('Submission.studentId', studentId));
+
+    final markList = res.map((e) => e['marks']).toList().whereType<int>();
+    if (markList.isEmpty) return 0;
+
+    return markList.reduce((a, b) => a + b);
+  }
+
+  Future<int> getTotalMarks(int classId) async {
+    final res = (await _supabase
+        .from('Assessment')
+        .select('max')
+        .eq('classId', classId));
+    final maxList = res.map((e) => e['max']).whereType<int>().toList();
+    if (maxList.isEmpty) return 0;
+    return maxList.reduce((a, b) => a + b);
+  }
+
+  Future<double> getWeightedMarks(int classId, int studentId) async {
+    final res = (await _supabase
+        .from('Assessment')
+        .select('Submission(marks), weight')
+        .eq('classId', classId)
+        .eq('Submission.studentId', studentId));
+
+    final markList = res
+        .map((e) => {0: e['marks'], 1: e['weight']})
+        .whereType<Map<int, dynamic>>()
+        .where((element) => element[0] != null)
+        .toList();
+
+    if (markList.isEmpty) return 0.0;
+    return markList
+        .map((e) => (e[0]!.isEmpty ? 0 : e[0][0]! * e[1]))
+        .toList()
+        .reduce((a, b) => a + b);
+  }
+
+  Future<int> getWeightedTotalMarks(int classId) async {
+    final res = (await _supabase
+        .from('Assessment')
+        .select('max, weight')
+        .eq('classId', classId));
+
+    final totalList = res.map((e) => e['weight']).toList();
+    if (totalList.isEmpty) return 0;
+    return totalList.reduce((a, b) => a + b);
+  }
 }
