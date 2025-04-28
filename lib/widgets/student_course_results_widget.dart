@@ -48,12 +48,24 @@ class StudentCourseResultWidget extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            stateController.courseResults[index]["title"],
-                            style: Get.textTheme.bodyLarge!.copyWith(
-                              color: Get.theme.colorScheme.primary,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                stateController.courseResults[index]["title"],
+                                style: Get.textTheme.bodyLarge!.copyWith(
+                                  color: Get.theme.colorScheme.primary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                stateController.courseResults[index]["type"],
+                                style: Get.textTheme.bodySmall!.copyWith(
+                                  color: Get.theme.colorScheme.secondary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
                           Row(
                             spacing: 4,
@@ -65,7 +77,7 @@ class StudentCourseResultWidget extends StatelessWidget {
                                             ["marks"] as int)
                                         .toStringAsFixed(1),
                                     style: Get.textTheme.bodyMedium!.copyWith(
-                                      color: Get.theme.colorScheme.primary,
+                                      color: Get.theme.colorScheme.secondary,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -87,8 +99,7 @@ class StudentCourseResultWidget extends StatelessWidget {
                               ),
                               Text(
                                 "weighted",
-                                style: Get.textTheme.bodyLarge!.copyWith(
-                                  color: Get.theme.colorScheme.primary,
+                                style: Get.textTheme.bodySmall!.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -103,7 +114,7 @@ class StudentCourseResultWidget extends StatelessWidget {
                                                 ["weight"] as double)
                                         .toStringAsFixed(1),
                                     style: Get.textTheme.bodyMedium!.copyWith(
-                                      color: Get.theme.colorScheme.primary,
+                                      color: Get.theme.colorScheme.secondary,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),

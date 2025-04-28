@@ -43,6 +43,13 @@ class StudentCourseSummaryWidget extends StatelessWidget {
             ],
           ),
         ),
+
+        /// TODO: Atendance
+        /// Show total attendance and total classes
+        /// Done by getting the unique schedule count then the total attendance count
+
+        /// TODO: Results
+        /// Show total marks and total weightage
       ],
     );
   }

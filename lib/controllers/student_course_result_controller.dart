@@ -28,6 +28,7 @@ class StudentCourseResultController extends GetxController {
         "title": e["title"],
         "max": e["max"],
         "weight": e["weight"],
+        "type": e["type"],
         // e["Submission"].isNotEmpty ? e["Submission"]["marks"] : 0,
         "marks": submission.isNotEmpty
             ? submission.fold(0, (sum, item) => sum + (item["marks"] as int))

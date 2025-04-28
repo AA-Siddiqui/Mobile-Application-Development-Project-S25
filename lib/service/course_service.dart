@@ -33,7 +33,7 @@ class CourseService {
   ) async {
     return _supabase
         .from("Assessment")
-        .select("id, title, max, weight, Submission(marks)")
+        .select("id, title, max, weight, type, Submission(marks)")
         .eq("classId", classId)
         .filter("Submission.studentId", "eq", studentId);
   }
