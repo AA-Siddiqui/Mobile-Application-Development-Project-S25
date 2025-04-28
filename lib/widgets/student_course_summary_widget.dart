@@ -54,8 +54,21 @@ class StudentCourseSummaryWidget extends StatelessWidget {
             ],
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Attendance",
+              style: Get.textTheme.headlineMedium!.copyWith(
+                color: Get.theme.colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
         Obx(
-          () => Skeleton.leaf(
+          () => Skeletonizer(
             enabled: stateController.isLoading,
             child: GestureDetector(
               onTap: () {
@@ -133,8 +146,21 @@ class StudentCourseSummaryWidget extends StatelessWidget {
             ),
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Results",
+              style: Get.textTheme.headlineMedium!.copyWith(
+                color: Get.theme.colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
         Obx(
-          () => Skeleton.leaf(
+          () => Skeletonizer(
             enabled: stateController.isLoading,
             child: GestureDetector(
               onTap: () {
