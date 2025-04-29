@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:project/controllers/auth_controller.dart';
 import 'package:project/pages/profile_page.dart';
 import 'package:project/pages/student_home_page.dart';
+import 'package:project/pages/student_invoice_page.dart';
 
 class MyDrawer extends StatelessWidget {
   MyDrawer({super.key});
@@ -42,14 +43,25 @@ class MyDrawer extends StatelessWidget {
                   onTap: () => Get.to(() => ProfilePage()),
                 ),
                 ListTile(
-                  title: Text("Logout"),
-                  leading: Icon(Icons.exit_to_app),
-                  onTap: authController.signOut,
+                  title: Text("Results"),
+                  leading: Icon(Icons.grading),
+                  onTap: () => Get.to(() => Placeholder()),
+                ),
+                ListTile(
+                  title: Text("Invoices"),
+                  leading: Icon(Icons.article),
+                  onTap: () => Get.to(() => StudentInvoicePage()),
                 ),
               ],
             ),
           ),
-          SafeArea(child: ListTile(title: Text("Made by someone"))),
+          SafeArea(
+            child: ListTile(
+              title: Text("Logout"),
+              leading: Icon(Icons.exit_to_app),
+              onTap: authController.signOut,
+            ),
+          ),
         ],
       ),
     );
