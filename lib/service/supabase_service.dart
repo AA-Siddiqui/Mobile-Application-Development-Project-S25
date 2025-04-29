@@ -2,6 +2,7 @@ import 'package:project/service/course_activity_service.dart';
 import 'package:project/service/course_service.dart';
 import 'package:project/service/department_service.dart';
 import 'package:project/service/invoice_service.dart';
+import 'package:project/service/result_service.dart';
 import 'package:project/service/user_service.dart';
 
 class SupabaseService {
@@ -19,4 +20,7 @@ class SupabaseService {
 
   static InvoiceService invoiceService = InvoiceService();
   static InvoiceService get invoice => invoiceService;
+
+  static ResultService resultService = ResultService();
+  static ResultService get result => resultService;
 }

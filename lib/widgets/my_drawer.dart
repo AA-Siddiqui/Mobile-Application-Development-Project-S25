@@ -4,6 +4,7 @@ import 'package:project/controllers/auth_controller.dart';
 import 'package:project/pages/profile_page.dart';
 import 'package:project/pages/student_home_page.dart';
 import 'package:project/pages/student_invoice_page.dart';
+import 'package:project/pages/student_results_page.dart';
 
 class MyDrawer extends StatelessWidget {
   MyDrawer({super.key});
@@ -45,7 +46,7 @@ class MyDrawer extends StatelessWidget {
                 ListTile(
                   title: Text("Results"),
                   leading: Icon(Icons.grading),
-                  onTap: () => Get.to(() => Placeholder()),
+                  onTap: () => Get.to(() => StudentResultsPage()),
                 ),
                 ListTile(
                   title: Text("Invoices"),
