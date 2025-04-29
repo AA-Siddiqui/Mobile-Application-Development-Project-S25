@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:project/controllers/auth_controller.dart';
 import 'package:project/controllers/profile_controller.dart';
 import 'package:project/controllers/student_home_controller.dart';
-import 'package:project/pages/profile_page.dart';
 import 'package:project/pages/student_course_page.dart';
+import 'package:project/widgets/my_drawer.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class StudentHomePage extends StatelessWidget {
@@ -33,43 +33,7 @@ class StudentHomePage extends StatelessWidget {
           ),
         ],
       ),
-      drawer: Drawer(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-              child: ListView(
-                children: [
-                  DrawerHeader(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "UMS",
-                        style: TextStyle(
-                          fontSize: 72,
-                          color: Get.theme.colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  ListTile(
-                    title: Text("Profile"),
-                    leading: Icon(Icons.person),
-                    onTap: () => Get.to(() => ProfilePage()),
-                  ),
-                  ListTile(
-                    title: Text("Logout"),
-                    leading: Icon(Icons.exit_to_app),
-                    onTap: authController.signOut,
-                  ),
-                ],
-              ),
-            ),
-            SafeArea(child: ListTile(title: Text("Made by someone"))),
-          ],
-        ),
-      ),
+      drawer: MyDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(

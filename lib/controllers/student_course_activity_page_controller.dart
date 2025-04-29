@@ -31,10 +31,17 @@ class StudentCourseActivityPageController extends GetxController {
     final res = await SupabaseService.courseActivityService
         .getAssessmentDetails(assessmentId, studentId);
 
+    if (res.isEmpty) {
+      marks = 0;
+      files = [];
+      submissionId = null;
+      isLoading = false;
+      return;
+    }
+
     marks = res[0]["marks"] ?? 0;
     files = res[0]["SubmissionFile"] ?? [];
     submissionId = res[0]["id"];
-    print(files);
 
     isLoading = false;
   }

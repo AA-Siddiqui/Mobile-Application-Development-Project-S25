@@ -66,7 +66,11 @@ class CourseService {
         .eq('classId', classId)
         .eq('Submission.studentId', studentId));
 
-    final markList = res.map((e) => e['marks']).toList().whereType<int>();
+    final markList = res
+        .map(
+            (e) => e['Submission'].isNotEmpty ? e['Submission'][0]['marks'] : 0)
+        .toList()
+        .whereType<int>();
     if (markList.isEmpty) return 0;
 
     return markList.reduce((a, b) => a + b);
@@ -85,19 +89,23 @@ class CourseService {
   Future<double> getWeightedMarks(int classId, int studentId) async {
     final res = (await _supabase
         .from('Assessment')
-        .select('Submission(marks), weight')
+        .select('Submission(marks), weight, max')
         .eq('classId', classId)
         .eq('Submission.studentId', studentId));
 
     final markList = res
-        .map((e) => {0: e['marks'], 1: e['weight']})
+        .map((e) => {
+              0: e['Submission'].isNotEmpty ? e['Submission'][0]['marks'] : 0,
+              1: e['weight'],
+              2: e['max'],
+            })
         .whereType<Map<int, dynamic>>()
         .where((element) => element[0] != null)
         .toList();
 
-    if (markList.isEmpty) return 0.0;
+    if (markList.isEmpty) return 0;
     return markList
-        .map((e) => (e[0]!.isEmpty ? 0 : e[0][0]! * e[1]))
+        .map((e) => (e[0]! / e[2]! * e[1]!))
         .toList()
         .reduce((a, b) => a + b);
   }

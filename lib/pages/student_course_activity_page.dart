@@ -193,12 +193,15 @@ class StudentCourseActivityPage extends StatelessWidget {
                         "name": file.name,
                         "url": Supabase.instance.client.storage
                             .from('submissions')
-                            .getPublicUrl(response),
+                            .getPublicUrl(
+                                "submissions/${data["id"]}/${authController.roleId}/${file.name}"),
                         "submissionId": sub[0]["id"],
                       });
                     }
                     stateController.getDetails(
-                        data["id"], authController.roleId);
+                      data["id"],
+                      authController.roleId,
+                    );
                   },
                   child: _buildTile("Upload", "Tap here to upload file"),
                 ),
@@ -240,7 +243,8 @@ class StudentCourseActivityPage extends StatelessWidget {
                                     ),
                                     onPressed: () async {
                                       final Uri url = Uri.parse(
-                                          stateController.files[index]["url"]);
+                                        stateController.files[index]["url"],
+                                      );
 
                                       if (!await launchUrl(url)) {
                                         throw Exception(
