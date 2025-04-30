@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:project/controllers/auth_controller.dart';
 import 'package:project/controllers/profile_controller.dart';
 import 'package:project/controllers/student_home_controller.dart';
+import 'package:project/controllers/student_results_controller.dart';
 import 'package:project/pages/student_course_page.dart';
 import 'package:project/widgets/my_drawer.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -13,6 +14,9 @@ class StudentHomePage extends StatelessWidget {
       Get.put<ProfileController>(ProfileController());
   final StudentHomeController studentHomeController =
       Get.put<StudentHomeController>(StudentHomeController());
+  late final resultsController =
+      Get.put(StudentResultsController(authController.roleId));
+
   StudentHomePage({super.key});
 
   @override
@@ -63,22 +67,15 @@ class StudentHomePage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Container(
-                padding: EdgeInsets.all(8),
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                 decoration: BoxDecoration(
                   color: Get.theme.colorScheme.primaryContainer,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 16),
-                      child: CircleAvatar(
-                        radius: 32,
-                        backgroundColor: Get.theme.colorScheme.primary,
-                      ),
-                    ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -102,6 +99,15 @@ class StudentHomePage extends StatelessWidget {
                               ),
                             )),
                       ],
+                    ),
+                    Obx(
+                      () => Text(
+                        resultsController.cgpa.toStringAsFixed(2),
+                        style: Get.theme.textTheme.headlineLarge!.copyWith(
+                          color: Get.theme.colorScheme.onPrimaryContainer,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ],
                 ),

@@ -46,6 +46,10 @@ class StudentResultsController extends GetxController {
     }
   }
 
+  StudentResultsController(int studentId) {
+    getResults(studentId);
+  }
+
   void getResults(int studentId) async {
     isLoading = true;
     results = await SupabaseService.result.getResults(studentId);

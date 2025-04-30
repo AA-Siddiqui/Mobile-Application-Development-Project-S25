@@ -171,98 +171,45 @@ class StudentCourseSummaryWidget extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: insertSeparatorsInPlace(
-                    [
-                      Row(
-                        spacing: 8,
-                        children: [
-                          Column(
-                            children: [
-                              Text(
-                                stateController.obtainedMarks
-                                    .toStringAsFixed(1),
-                                style: Get.textTheme.bodyLarge!.copyWith(
-                                  color: Get.theme.colorScheme.primary,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                "marks",
-                                style: Get.textTheme.bodyLarge!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                  spacing: 8,
+                  children: [
+                    Column(
+                      children: [
+                        Text(
+                          stateController.obtainedWeightedMarks
+                              .toStringAsFixed(1),
+                          style: Get.textTheme.bodyLarge!.copyWith(
+                            color: Get.theme.colorScheme.primary,
+                            fontWeight: FontWeight.bold,
                           ),
-                          Text("out of"),
-                          Column(
-                            children: [
-                              Text(
-                                stateController.totalMarks.toStringAsFixed(1),
-                                style: Get.textTheme.bodyLarge!.copyWith(
-                                  color: Get.theme.colorScheme.primary,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                "marks",
-                                style: Get.textTheme.bodyLarge!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                        ),
+                        Text(
+                          "marks",
+                          style: Get.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.bold,
                           ),
-                        ],
-                      ),
-                      Row(
-                        spacing: 8,
-                        children: [
-                          Column(
-                            children: [
-                              Text(
-                                stateController.obtainedWeightedMarks
-                                    .toStringAsFixed(1),
-                                style: Get.textTheme.bodyLarge!.copyWith(
-                                  color: Get.theme.colorScheme.primary,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                "marks",
-                                style: Get.textTheme.bodyLarge!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text("out of"),
-                          Column(
-                            children: [
-                              Text(
-                                stateController.totalWeightedMarks
-                                    .toStringAsFixed(1),
-                                style: Get.textTheme.bodyLarge!.copyWith(
-                                  color: Get.theme.colorScheme.primary,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                "marks",
-                                style: Get.textTheme.bodyLarge!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                    Container(
-                      color: Get.theme.colorScheme.primary,
-                      height: 40,
-                      width: 1.5,
+                        ),
+                      ],
                     ),
-                  ),
+                    Text("out of"),
+                    Column(
+                      children: [
+                        Text(
+                          stateController.totalWeightedMarks.toStringAsFixed(1),
+                          style: Get.textTheme.bodyLarge!.copyWith(
+                            color: Get.theme.colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "marks",
+                          style: Get.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),

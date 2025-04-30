@@ -7,10 +7,9 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 class StudentResultsPage extends StatelessWidget {
   final authController = Get.find<AuthController>();
-  final stateController = Get.put(StudentResultsController());
-  StudentResultsPage({super.key}) {
-    stateController.getResults(authController.roleId);
-  }
+  late final stateController =
+      Get.put(StudentResultsController(authController.roleId));
+  StudentResultsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +32,22 @@ class StudentResultsPage extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("CGPA"),
-                Obx(() => Text(stateController.cgpa.toStringAsFixed(2))),
+                Text(
+                  "CGPA",
+                  style: Get.textTheme.bodyLarge!.copyWith(
+                    color: Get.theme.colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Obx(
+                  () => Text(
+                    stateController.cgpa.toStringAsFixed(2),
+                    style: Get.theme.textTheme.headlineSmall!.copyWith(
+                      color: Get.theme.colorScheme.onPrimaryContainer,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -57,8 +70,35 @@ class StudentResultsPage extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(result["title"].toString()),
-                            Text(result["grade"].toString()),
+                            Text(
+                              result["title"].toString(),
+                              style: Get.textTheme.bodyLarge!.copyWith(
+                                color: Get.theme.colorScheme.primary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                color: Get.theme.colorScheme.tertiaryContainer,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  result["grade"].toString(),
+                                  style: Get.textTheme.bodyLarge!.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: {
+                                          "A+": Get.theme.colorScheme.primary,
+                                          "F": Get.theme.colorScheme.error
+                                        }[result["grade"]] ??
+                                        Get.theme.colorScheme
+                                            .onSecondaryContainer,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       );

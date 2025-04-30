@@ -26,7 +26,7 @@ class StudentHomeController extends GetxController {
 
   void fetchClassData() async {
     // Fetch class data from the database
-    isLoading = false;
+    isLoading = true;
 
     while (authController.roleId == -1) {
       await Future.delayed(const Duration(milliseconds: 100));
