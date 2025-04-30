@@ -20,8 +20,8 @@ class StudentCourseActivityPageController extends GetxController {
 
   var filesRx = [].obs;
   // ignore: invalid_use_of_protected_member
-  List get files => filesRx.value;
-  set files(List value) => filesRx.value = value;
+  List get uploadedFiles => filesRx.value;
+  set uploadedFiles(List value) => filesRx.value = value;
 
   Future<void> getDetails(
     int assessmentId,
@@ -33,14 +33,14 @@ class StudentCourseActivityPageController extends GetxController {
 
     if (res.isEmpty) {
       marks = 0;
-      files = [];
+      uploadedFiles = [];
       submissionId = null;
       isLoading = false;
       return;
     }
 
     marks = res[0]["marks"] ?? 0;
-    files = res[0]["SubmissionFile"] ?? [];
+    uploadedFiles = res[0]["SubmissionFile"] ?? [];
     submissionId = res[0]["id"];
 
     isLoading = false;

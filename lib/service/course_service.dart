@@ -12,7 +12,8 @@ class CourseService {
   Future<List<Map<String, dynamic>>> getCourseActivities(int classId) async {
     return await _supabase
         .from("Assessment")
-        .select("id, title, description, deadline, max, weight, type")
+        .select(
+            "id, title, description, deadline, max, weight, type, AssessmentFile(name, url)")
         .eq('classId', classId);
   }
 

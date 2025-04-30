@@ -61,9 +61,9 @@ class ProfilePage extends StatelessWidget {
                       children: [
                         Column(
                           children: [
-                            CircleAvatar(
-                              radius: 64,
-                            ),
+                            // CircleAvatar(
+                            //   radius: 64,
+                            // ),
                             Text(
                               controller.name ?? "Name",
                               style: TextStyle(
