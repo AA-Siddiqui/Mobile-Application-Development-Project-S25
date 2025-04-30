@@ -49,12 +49,22 @@ class StudentHomeController extends GetxController {
       //   }
       // }
       data = data["Class"];
+
       return {
         "id": data["id"],
         "courseName": data["Course"]["name"],
         "teacherName": data["Teacher"]["User"]["name"],
         "term": data["term"],
         "section": data["section"],
+        "totalClasses": data["Schedule"].length,
+        "attendedClasses": data["Schedule"].fold(
+            0,
+            (cumm, schedule) =>
+                cumm +
+                schedule["Attendance"].fold(
+                    0,
+                    (sum, attendance) =>
+                        sum + (attendance["present"] ? 1 : 0))),
       };
     }).toList();
     isLoading = false;

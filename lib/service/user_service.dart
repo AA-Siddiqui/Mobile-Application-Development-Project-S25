@@ -45,9 +45,11 @@ class UserService {
   }
 
   Future<List<Map<String, dynamic>>> getClassDetails(int roleId) async {
+    // TODO: check if this is correct
     return await _supabase
         .from("Enrollment")
-        .select("Class(id, Course(name), Teacher(User(name)), term, section)")
+        .select(
+            "Class(id, Course(name), Teacher(User(name)), Schedule(Attendance(present)), term, section)")
         .eq("studentId", roleId);
   }
 

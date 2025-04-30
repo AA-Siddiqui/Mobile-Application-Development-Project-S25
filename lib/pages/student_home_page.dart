@@ -182,13 +182,28 @@ class StudentHomePage extends StatelessWidget {
                                               )
                                             ],
                                           ),
-                                          Text(
-                                            "Taught by Mr. ${studentHomeController.classes[index]["teacherName"]}",
-                                            style: TextStyle(
-                                              color: Get.theme.colorScheme
-                                                  .onPrimaryContainer,
-                                            ),
-                                          )
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                "${(studentHomeController.classes[index]["attendedClasses"] / studentHomeController.classes[index]["totalClasses"] * 100).toStringAsFixed(1)}% Attended",
+                                                style: Get.textTheme.bodyLarge!
+                                                    .copyWith(
+                                                  color: Get.theme.colorScheme
+                                                      .primary,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Text(
+                                                "Taught by Mr. ${studentHomeController.classes[index]["teacherName"]}",
+                                                style: TextStyle(
+                                                  color: Get.theme.colorScheme
+                                                      .onPrimaryContainer,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ],
                                       ),
                                     ),
