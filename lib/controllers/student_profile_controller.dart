@@ -1,17 +1,17 @@
 import 'package:get/get.dart';
 import 'package:project/service/supabase_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../models/profile_model.dart';
+import '../models/student_profile_model.dart';
 import '../utils/db_helper.dart';
 
-class ProfileController extends GetxController {
+class StudentProfileController extends GetxController {
   var isLoadingRx = false.obs;
   bool get isLoading => isLoadingRx.value;
   set isLoading(bool value) => isLoadingRx.value = value;
 
-  var profileRx = Rxn<ProfileModel>();
-  ProfileModel? get profile => profileRx.value;
-  set profile(ProfileModel? value) => profileRx.value = value;
+  var profileRx = Rxn<StudentProfileModel>();
+  StudentProfileModel? get profile => profileRx.value;
+  set profile(StudentProfileModel? value) => profileRx.value = value;
 
   @override
   void onInit() {
@@ -22,9 +22,9 @@ class ProfileController extends GetxController {
   void fetchProfileData() async {
     // Fetch from local database
     isLoading = true;
-    final localData = await DBHelper.profile.fetchProfile();
+    final localData = await DBHelper.studentProfile.fetchProfile();
     if (localData != null) {
-      profile = ProfileModel(
+      profile = StudentProfileModel(
         name: localData['name'],
         dob: localData['dob'],
         address: localData['address'],
@@ -47,7 +47,8 @@ class ProfileController extends GetxController {
 
     final userResponse = await SupabaseService.user.getProfilePageData();
 
-    profile = ProfileModel.fromJson({...userResponse, "email": user.email});
+    profile =
+        StudentProfileModel.fromJson({...userResponse, "email": user.email});
 
     Map<String, dynamic> flattenedResponse = {
       "name": userResponse["name"],
@@ -61,8 +62,8 @@ class ProfileController extends GetxController {
     };
 
     // Update local database
-    await DBHelper.profile.clearProfile();
-    await DBHelper.profile.insertProfile(flattenedResponse);
+    await DBHelper.studentProfile.clearProfile();
+    await DBHelper.studentProfile.insertProfile(flattenedResponse);
 
     isLoading = false;
   }

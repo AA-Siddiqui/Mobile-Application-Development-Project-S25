@@ -1,10 +1,11 @@
 import 'package:project/utils/db_helper.dart';
 import 'package:sqflite/sqflite.dart';
 
-class ProfileActions {
-  static final ProfileActions _instance = ProfileActions._internal();
-  factory ProfileActions() => _instance;
-  ProfileActions._internal();
+class StudentProfileActions {
+  static final StudentProfileActions _instance =
+      StudentProfileActions._internal();
+  factory StudentProfileActions() => _instance;
+  StudentProfileActions._internal();
 
   final database = DBHelper().db;
   Future<void> createTable(Database db) async {

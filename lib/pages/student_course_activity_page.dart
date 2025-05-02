@@ -257,7 +257,6 @@ class StudentCourseActivityPage extends StatelessWidget {
                       0)
                     GestureDetector(
                       onTap: () async {
-                        // TODO: Throw this shit into appropriate files
                         final status = await Permission.storage.request();
                         final hasPermission = status.isGranted;
 

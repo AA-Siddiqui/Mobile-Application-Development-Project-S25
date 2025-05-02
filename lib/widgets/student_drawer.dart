@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project/controllers/auth_controller.dart';
-import 'package:project/pages/profile_page.dart';
+import 'package:project/pages/student_profile_page.dart';
 import 'package:project/pages/student_home_page.dart';
 import 'package:project/pages/student_invoice_page.dart';
 import 'package:project/pages/student_results_page.dart';
 
-class MyDrawer extends StatelessWidget {
-  MyDrawer({super.key});
+class StudentDrawer extends StatelessWidget {
+  StudentDrawer({super.key});
 
   final authController = Get.find<AuthController>();
 

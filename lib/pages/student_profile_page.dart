@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:project/controllers/profile_controller.dart';
+import 'package:project/controllers/student_profile_controller.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
-  final controller = Get.put(ProfileController());
+  final controller = Get.put(StudentProfileController());
 
   Widget _buildTile(String title, String? value) {
     return Container(

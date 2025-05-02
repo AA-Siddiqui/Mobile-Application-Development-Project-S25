@@ -4,6 +4,7 @@ import 'package:project/controllers/auth_controller.dart';
 import 'package:project/pages/login_page.dart';
 import 'package:project/pages/signup_page.dart';
 import 'package:project/pages/student_home_page.dart';
+import 'package:project/pages/teacher_home_page.dart';
 
 class AuthChecker extends StatelessWidget {
   AuthChecker({super.key});
@@ -21,11 +22,7 @@ class AuthChecker extends StatelessWidget {
                 ),
               ),
               StudentHomePage(),
-              Scaffold(
-                body: Center(
-                  child: Text("Teacher Page"),
-                ),
-              ),
+              TeacherHomePage(),
               Scaffold(
                 body: Center(
                   child: Text("Admin Page"),

@@ -1,4 +1,4 @@
-import 'package:project/db/profile_actions.dart';
+import 'package:project/db/student_profile_actions.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -21,10 +21,10 @@ class DBHelper {
       path,
       version: 1,
       onCreate: (db, version) async {
-        profile.createTable(db);
+        studentProfile.createTable(db);
       },
     );
   }
 
-  static ProfileActions get profile => ProfileActions();
+  static StudentProfileActions get studentProfile => StudentProfileActions();
 }

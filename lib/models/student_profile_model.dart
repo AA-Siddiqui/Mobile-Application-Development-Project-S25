@@ -1,4 +1,4 @@
-class ProfileModel {
+class StudentProfileModel {
   final String name;
   final String dob;
   final String address;
@@ -7,7 +7,7 @@ class ProfileModel {
   final String program;
   final String email;
 
-  ProfileModel({
+  StudentProfileModel({
     required this.name,
     required this.dob,
     required this.address,
@@ -17,8 +17,8 @@ class ProfileModel {
     required this.email,
   });
 
-  factory ProfileModel.fromJson(Map<String, dynamic> json) {
-    return ProfileModel(
+  factory StudentProfileModel.fromJson(Map<String, dynamic> json) {
+    return StudentProfileModel(
       name: json['name'] ?? '',
       dob: json['dob'] ?? '',
       address: json['address'] ?? '',
