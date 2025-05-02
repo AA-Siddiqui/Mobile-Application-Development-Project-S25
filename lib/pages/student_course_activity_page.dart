@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,7 +6,6 @@ import 'package:project/controllers/auth_controller.dart';
 import 'package:project/controllers/student_course_activity_page_controller.dart';
 import 'package:project/utils/toast.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class StudentCourseActivityPage extends StatelessWidget {
@@ -16,7 +13,7 @@ class StudentCourseActivityPage extends StatelessWidget {
   final stateController = Get.put(StudentCourseActivityPageController());
   final authController = Get.find<AuthController>();
   StudentCourseActivityPage(this.data, {super.key}) {
-    stateController.getDetails(
+    stateController.getAssessmentDetails(
       data["id"],
       authController.roleId,
     );
@@ -280,62 +277,15 @@ class StudentCourseActivityPage extends StatelessWidget {
                           return;
                         }
 
-                        final supabase = Supabase.instance.client;
-                        final files = result.files;
-
-                        final sub = await Supabase.instance.client
-                            .from("Submission")
-                            .upsert(stateController.submissionId == null
-                                ? {
-                                    "assessmentId": data["id"],
-                                    "studentId": authController.roleId,
-                                    "marks": 0,
-                                  }
-                                : {
-                                    "id": stateController.submissionId,
-                                    "assessmentId": data["id"],
-                                    "studentId": authController.roleId,
-                                    "marks": stateController.marks,
-                                  })
-                            .select();
-
-                        for (final file in files) {
-                          final fileBytes = File(file.path!).readAsBytesSync();
-
-                          final response = await supabase.storage
-                              .from('submissions')
-                              .uploadBinary(
-                                'submissions/${data["id"]}/${authController.roleId}/${file.name}',
-                                fileBytes,
-                                fileOptions: FileOptions(
-                                  upsert: true,
-                                ),
-                              );
-
-                          if (response.isNotEmpty) {
-                            Toast.info("Upload Successful",
-                                "File ${file.name} uploaded successfully!");
-                          } else {
-                            Toast.error("Upload error", response);
-                          }
-
-                          await Supabase.instance.client
-                              .from("SubmissionFile")
-                              .insert({
-                            "name": file.name,
-                            "url": Supabase.instance.client.storage
-                                .from('submissions')
-                                .getPublicUrl(
-                                    "submissions/${data["id"]}/${authController.roleId}/${file.name}"),
-                            "submissionId": sub[0]["id"],
-                          });
-                        }
-                        stateController.getDetails(
+                        stateController.uploadSubmission(
+                          result.files,
                           data["id"],
                           authController.roleId,
                         );
                       },
-                      child: _buildTile("Upload", "Tap here to upload file"),
+                      child: stateController.isUploading
+                          ? CircularProgressIndicator()
+                          : _buildTile("Upload", "Tap here to upload file"),
                     ),
                 ],
               ),

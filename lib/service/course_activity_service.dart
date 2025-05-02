@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:project/utils/toast.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CourseActivityService {
@@ -17,5 +21,65 @@ class CourseActivityService {
         .select("id, marks, SubmissionFile(name, url)")
         .eq('assessmentId', assessmentId)
         .eq('studentId', studentId);
+  }
+
+  Future<List<Map<String, String>>> uploadSubmission(
+    List<PlatformFile> files,
+    int assessmentId,
+    int studentId,
+    int marks,
+    int? submissionId,
+  ) async {
+    final sub = await _supabase
+        .from("Submission")
+        .upsert(submissionId == null
+            ? {
+                "assessmentId": assessmentId,
+                "studentId": studentId,
+                "marks": 0,
+              }
+            : {
+                "id": submissionId,
+                "assessmentId": assessmentId,
+                "studentId": studentId,
+                "marks": marks,
+              })
+        .select();
+
+    List<Map<String, String>> uploadedFiles = [];
+    for (final file in files) {
+      final fileBytes = File(file.path!).readAsBytesSync();
+
+      final response = await _supabase.storage.from('submissions').uploadBinary(
+            'submissions/$assessmentId/$studentId/${file.name}',
+            fileBytes,
+            fileOptions: FileOptions(
+              upsert: true,
+            ),
+          );
+
+      if (response.isNotEmpty) {
+        Toast.info(
+            "Upload Successful", "File ${file.name} uploaded successfully!");
+      } else {
+        Toast.error("Upload error", response);
+      }
+
+      await _supabase.from("SubmissionFile").insert({
+        "name": file.name,
+        "url": _supabase.storage
+            .from('submissions')
+            .getPublicUrl("submissions/$assessmentId/$studentId/${file.name}"),
+        "submissionId": sub[0]["id"],
+      });
+
+      uploadedFiles.add({
+        "name": file.name,
+        "url": _supabase.storage
+            .from('submissions')
+            .getPublicUrl("submissions/$assessmentId/$studentId/${file.name}")
+      });
+    }
+    return uploadedFiles;
   }
 }

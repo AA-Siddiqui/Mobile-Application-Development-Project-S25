@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
 import 'package:project/service/supabase_service.dart';
 
@@ -9,6 +10,10 @@ class StudentCourseActivityPageController extends GetxController {
   var isLoadingRx = false.obs;
   bool get isLoading => isLoadingRx.value;
   set isLoading(bool value) => isLoadingRx.value = value;
+
+  var isUploadingRx = false.obs;
+  bool get isUploading => isUploadingRx.value;
+  set isUploading(bool value) => isUploadingRx.value = value;
 
   var marksRx = 0.obs;
   int get marks => marksRx.value;
@@ -23,13 +28,15 @@ class StudentCourseActivityPageController extends GetxController {
   List get uploadedFiles => filesRx.value;
   set uploadedFiles(List value) => filesRx.value = value;
 
-  Future<void> getDetails(
+  Future<void> getAssessmentDetails(
     int assessmentId,
     int studentId,
   ) async {
     isLoading = true;
-    final res = await SupabaseService.courseActivityService
-        .getAssessmentDetails(assessmentId, studentId);
+    final res = await SupabaseService.courseActivity.getAssessmentDetails(
+      assessmentId,
+      studentId,
+    );
 
     if (res.isEmpty) {
       marks = 0;
@@ -44,5 +51,22 @@ class StudentCourseActivityPageController extends GetxController {
     submissionId = res[0]["id"];
 
     isLoading = false;
+  }
+
+  Future<void> uploadSubmission(
+    List<PlatformFile> files,
+    int assessmentId,
+    int studentId,
+  ) async {
+    isUploading = true;
+    final newFiles = await SupabaseService.courseActivity.uploadSubmission(
+      files,
+      assessmentId,
+      studentId,
+      marks,
+      submissionId,
+    );
+    uploadedFiles.addAll(newFiles);
+    isUploading = false;
   }
 }
