@@ -9,11 +9,20 @@ class UserService {
   Session? get session => _supabase.auth.currentSession;
   User? get user => _supabase.auth.currentUser;
 
-  Future<Map<String, dynamic>> getProfilePageData() async {
-    return await Supabase.instance.client
+  Future<Map<String, dynamic>> getStudentProfilePageData() async {
+    return await _supabase
         .from("User")
         .select(
             "name, dob, address, Department(name), Student(rollNo, Program(name, level))")
+        .eq("id", user?.id ?? "")
+        .single();
+  }
+
+  Future<Map<String, dynamic>> getTeacherHomePageData() async {
+    return await _supabase
+        .from("User")
+        .select(
+            "name, dob, address, Department(name), Teacher(position, office, Class(term, section, Course(name)))")
         .eq("id", user?.id ?? "")
         .single();
   }

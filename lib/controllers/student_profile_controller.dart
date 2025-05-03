@@ -45,7 +45,7 @@ class StudentProfileController extends GetxController {
       return;
     }
 
-    final userResponse = await SupabaseService.user.getProfilePageData();
+    final userResponse = await SupabaseService.user.getStudentProfilePageData();
 
     profile =
         StudentProfileModel.fromJson({...userResponse, "email": user.email});

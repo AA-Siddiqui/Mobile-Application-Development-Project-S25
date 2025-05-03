@@ -65,92 +65,119 @@ class TeacherHomePage extends StatelessWidget {
                         color: Get.theme.colorScheme.primaryContainer,
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
                         children: [
-                          Obx(() => Text(
-                                teacherHomeController.position,
-                                style: Get.theme.textTheme.bodyLarge?.copyWith(
-                                  color:
-                                      Get.theme.colorScheme.onPrimaryContainer,
-                                ),
-                              )),
-                          Obx(() => Text(
-                                "Department of ${teacherHomeController.department}",
-                                style: Get.theme.textTheme.bodyMedium?.copyWith(
-                                  color:
-                                      Get.theme.colorScheme.onPrimaryContainer,
-                                ),
-                              )),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Obx(() => Text(
+                                    teacherHomeController.position,
+                                    style:
+                                        Get.theme.textTheme.bodyLarge?.copyWith(
+                                      color: Get
+                                          .theme.colorScheme.onPrimaryContainer,
+                                    ),
+                                  )),
+                              Obx(() => Text(
+                                    "Department of ${teacherHomeController.department}",
+                                    style: Get.theme.textTheme.bodyMedium
+                                        ?.copyWith(
+                                      color: Get
+                                          .theme.colorScheme.onPrimaryContainer,
+                                    ),
+                                  )),
+                            ],
+                          ),
                         ],
                       ),
                     ),
                   ),
                   SizedBox(
-                    height: 200,
+                    height: 160,
                     child: Obx(() => Skeletonizer(
                           enabled: teacherHomeController.isLoading,
-                          child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: teacherHomeController.classes.length,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () => Get.to(
-                                    () => TeacherCoursePage(
-                                      teacherHomeController.classes[index],
-                                    ),
-                                  ),
-                                  child: Card(
-                                    child: Container(
-                                      width: 200,
-                                      padding: EdgeInsets.all(8),
-                                      color: Get
-                                          .theme.colorScheme.primaryContainer,
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                teacherHomeController
-                                                        .classes[index]
-                                                    ["courseName"],
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Get.theme.colorScheme
-                                                      .onPrimaryContainer,
-                                                ),
-                                              ),
-                                              Text(
-                                                teacherHomeController
-                                                    .classes[index]["section"],
-                                                style: TextStyle(
-                                                  color: Get.theme.colorScheme
-                                                      .onPrimaryContainer,
-                                                ),
-                                              ),
-                                              Text(
-                                                teacherHomeController
-                                                    .classes[index]["term"],
-                                                style: TextStyle(
-                                                  color: Get.theme.colorScheme
-                                                      .onPrimaryContainer,
-                                                ),
-                                              )
-                                            ],
+                          child: Obx(
+                            () => teacherHomeController.classes.isNotEmpty
+                                ? ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount:
+                                        teacherHomeController.classes.length,
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        onTap: () => Get.to(
+                                          () => TeacherCoursePage(
+                                            teacherHomeController
+                                                .classes[index],
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                        child: Card(
+                                          child: Container(
+                                            width: 200,
+                                            padding: EdgeInsets.all(8),
+                                            color: Get.theme.colorScheme
+                                                .primaryContainer,
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      teacherHomeController
+                                                              .classes[index]
+                                                          ["courseName"],
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Get
+                                                            .theme
+                                                            .colorScheme
+                                                            .onPrimaryContainer,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      teacherHomeController
+                                                              .classes[index]
+                                                          ["section"],
+                                                      style: TextStyle(
+                                                        color: Get
+                                                            .theme
+                                                            .colorScheme
+                                                            .onPrimaryContainer,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      teacherHomeController
+                                                              .classes[index]
+                                                          ["term"],
+                                                      style: TextStyle(
+                                                        color: Get
+                                                            .theme
+                                                            .colorScheme
+                                                            .onPrimaryContainer,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    })
+                                : Center(
+                                    child: Text(
+                                      "You are not enrolled in any classes.",
                                     ),
                                   ),
-                                );
-                              }),
+                          ),
                         )),
                   ),
                 ],

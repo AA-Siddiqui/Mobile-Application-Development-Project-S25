@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:project/controllers/auth_controller.dart';
+import 'package:project/service/supabase_service.dart';
 
 class TeacherHomeController extends GetxController {
   final authController = Get.find<AuthController>();
@@ -8,10 +9,10 @@ class TeacherHomeController extends GetxController {
   /// This will be done by making a teacher_home_actions.dart and teacher_home_model.dart
   /// file and registering the action in the DBHelper class.
 
-  var classesRx = <Map<String, dynamic>>[].obs;
+  var classesRx = [].obs;
   // ignore: invalid_use_of_protected_member
-  List<Map<String, dynamic>> get classes => classesRx.value;
-  set classes(List<Map<String, dynamic>> value) => classesRx.value = value;
+  List get classes => classesRx.value;
+  set classes(List value) => classesRx.value = value;
 
   var isLoadingRx = false.obs;
   bool get isLoading => isLoadingRx.value;
@@ -29,5 +30,29 @@ class TeacherHomeController extends GetxController {
   String get department => departmentRx.value;
   set department(String value) => departmentRx.value = value;
 
-  // TODO: WORK HERE
+  @override
+  onInit() {
+    super.onInit();
+    getPageData();
+  }
+
+  Future<void> getPageData() async {
+    isLoading = true;
+
+    final data = await SupabaseService.user.getTeacherHomePageData();
+    name = data["name"];
+    position = data["Teacher"][0]["position"];
+    department = data["Department"]["name"];
+    final flattenedClasses = data["Teacher"][0]["Class"].map((c) {
+      return {
+        "courseName": c["Course"]["name"],
+        "term": c["term"],
+        "section": c["section"],
+      };
+    }).toList();
+
+    classes = flattenedClasses;
+
+    isLoading = false;
+  }
 }
