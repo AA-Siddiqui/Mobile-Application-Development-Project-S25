@@ -45,6 +45,7 @@ class TeacherHomeController extends GetxController {
     department = data["Department"]["name"];
     final flattenedClasses = data["Teacher"][0]["Class"].map((c) {
       return {
+        "id": c["id"],
         "courseName": c["Course"]["name"],
         "term": c["term"],
         "section": c["section"],

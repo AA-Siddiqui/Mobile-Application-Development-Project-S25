@@ -121,4 +121,12 @@ class CourseService {
     if (totalList.isEmpty) return 0;
     return totalList.reduce((a, b) => a + b);
   }
+
+  Future<List<Map<String, dynamic>>> getSchedules(int classId) async {
+    return await _supabase
+        .from("Schedule")
+        .select(
+            "startTime, endTime, Attendance(present, Student(id, rollNo, User(name)))")
+        .eq("classId", classId);
+  }
 }

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:project/controllers/teacher_course_controller.dart';
+import 'package:project/pages/teacher_attendance_list_page.dart';
+import 'package:project/widgets/item_container.dart';
 
 class TeacherCoursePage extends StatelessWidget {
   final Map<String, dynamic> data;
-  TeacherCoursePage(this.data, {super.key});
-
-  final stateController = Get.put(TeacherCourseController());
+  const TeacherCoursePage(this.data, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,65 +13,90 @@ class TeacherCoursePage extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.transparent,
-        title: Obx(
-          () => Text(
-            [
-              "Summary",
-              "Activities",
-              "Attendance",
-              "Results",
-            ][stateController.pageIndex],
-            style: Get.textTheme.headlineSmall!.copyWith(
-              color: Get.theme.colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
+        title: Text(
+          (data["courseName"] as String)
+              .split('')
+              .where((c) => c.contains(RegExp(r'[A-Z9\(\)]')))
+              .join(),
+          style: Get.textTheme.headlineSmall!.copyWith(
+            color: Get.theme.colorScheme.primary,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),
-      bottomNavigationBar: Obx(
-        () => BottomNavigationBar(
-          currentIndex: stateController.pageIndex,
-          items: [
-            BottomNavigationBarItem(
-              icon: GestureDetector(
-                onTap: () => stateController.changePage(0),
-                child: Icon(Icons.home),
-              ),
-              label: "Summary",
-            ),
-            BottomNavigationBarItem(
-              icon: GestureDetector(
-                onTap: () => stateController.changePage(1),
-                child: Icon(Icons.article),
-              ),
-              label: "Activity",
-            ),
-            BottomNavigationBarItem(
-              icon: GestureDetector(
-                onTap: () => stateController.changePage(2),
-                child: Icon(Icons.person),
-              ),
-              label: "Attendance",
-            ),
-            BottomNavigationBarItem(
-              icon: GestureDetector(
-                onTap: () => stateController.changePage(3),
-                child: Icon(Icons.grading),
-              ),
-              label: "Results",
-            ),
-          ],
+      body: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: <Map<String, dynamic>>[
+            {
+              "text": "Mark Attendance",
+              "action": () => Get.to(() => TeacherAttendanceListPage(data)),
+            },
+            {
+              "text": "Upload Assessment",
+              "action": () {},
+            },
+            {
+              "text": "Grade",
+              "action": () {},
+            },
+          ]
+              .map(
+                (content) => Expanded(
+                  child: GestureDetector(
+                    onTap: content["action"],
+                    child: ItemContainer(
+                      child: Center(
+                        child: Text(
+                          content["text"],
+                          style: Get.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Get.theme.colorScheme.onPrimaryContainer,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
         ),
-      ),
-      body: PageView(
-        controller: stateController.pageController,
-        children: [
-          // TODO: WORK HERE
-          // TeacherCourseSummaryWidget(data),
-          // TeacherCourseActivityWidget(data),
-          // TeacherCourseAttendanceWidget(data),
-          // TeacherCourseResultWidget(data),
-        ],
+        // Column(
+        //   mainAxisSize: MainAxisSize.max,
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //   children: <Map<String, dynamic>>[
+        //     {
+        //       "text": "Mark Attendance",
+        //       "action": () {},
+        //     },
+        //     {
+        //       "text": "Upload Assessment",
+        //       "action": () {},
+        //     },
+        //     {
+        //       "text": "Grade",
+        //       "action": () {},
+        //     },
+        //   ]
+        //       .map(
+        //         (content) => GestureDetector(
+        //           onTap: content["action"],
+        //           child: ItemContainer(
+        //             child: Center(
+        //               child: Text(
+        //                 content["text"],
+        //                 style: Get.textTheme.bodyLarge!.copyWith(
+        //                   fontWeight: FontWeight.bold,
+        //                   color: Get.theme.colorScheme.onPrimaryContainer,
+        //                 ),
+        //               ),
+        //             ),
+        //           ),
+        //         ),
+        //       )
+        //       .toList(),
+        // ),
       ),
     );
   }

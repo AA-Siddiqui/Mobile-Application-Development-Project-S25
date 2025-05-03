@@ -22,7 +22,7 @@ class UserService {
     return await _supabase
         .from("User")
         .select(
-            "name, dob, address, Department(name), Teacher(position, office, Class(term, section, Course(name)))")
+            "name, dob, address, Department(name), Teacher(position, office, Class(id, term, section, Course(name)))")
         .eq("id", user?.id ?? "")
         .single();
   }
