@@ -69,4 +69,11 @@ class StudentCourseActivityPageController extends GetxController {
     uploadedFiles.addAll(newFiles);
     isUploading = false;
   }
+
+  Future<void> deleteSubmissionFile(int submissionFileId) async {
+    isUploading = true;
+    await SupabaseService.courseActivity.deleteSubmissionFile(submissionFileId);
+    uploadedFiles.removeWhere((file) => file["id"] == submissionFileId);
+    isUploading = false;
+  }
 }

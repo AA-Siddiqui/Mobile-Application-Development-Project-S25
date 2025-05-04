@@ -18,7 +18,7 @@ class CourseActivityService {
   ) async {
     return await _supabase
         .from("Submission")
-        .select("id, marks, SubmissionFile(name, url)")
+        .select("id, marks, SubmissionFile(id, name, url)")
         .eq('assessmentId', assessmentId)
         .eq('studentId', studentId);
   }
@@ -65,15 +65,16 @@ class CourseActivityService {
         Toast.error("Upload error", response);
       }
 
-      await _supabase.from("SubmissionFile").insert({
+      final uploadedFile = await _supabase.from("SubmissionFile").insert({
         "name": file.name,
         "url": _supabase.storage
             .from('submissions')
             .getPublicUrl("submissions/$assessmentId/$studentId/${file.name}"),
         "submissionId": sub[0]["id"],
-      });
+      }).select();
 
       uploadedFiles.add({
+        "id": uploadedFile[0]["id"],
         "name": file.name,
         "url": _supabase.storage
             .from('submissions')
@@ -81,5 +82,9 @@ class CourseActivityService {
       });
     }
     return uploadedFiles;
+  }
+
+  Future<void> deleteSubmissionFile(int submissionFileId) async {
+    await _supabase.from("SubmissionFile").delete().eq("id", submissionFileId);
   }
 }

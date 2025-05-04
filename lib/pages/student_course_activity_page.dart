@@ -202,49 +202,81 @@ class StudentCourseActivityPage extends StatelessWidget {
                               scrollDirection: Axis.horizontal,
                               itemCount: stateController.uploadedFiles.length,
                               itemBuilder: (context, index) {
-                                return Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 7.5, horizontal: 8),
-                                  margin: EdgeInsets.only(
-                                      right: 8, bottom: 8, top: 8),
-                                  decoration: BoxDecoration(
-                                    color:
-                                        Get.theme.colorScheme.primaryContainer,
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        stateController.uploadedFiles[index]
-                                            ["name"],
-                                        style:
-                                            Get.textTheme.titleSmall!.copyWith(
-                                          color: Get.theme.colorScheme
-                                              .onPrimaryContainer,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                return Stack(
+                                  alignment: Alignment.topRight,
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 7.5, horizontal: 8),
+                                      margin: EdgeInsets.only(
+                                          right: 8, bottom: 8, top: 8),
+                                      decoration: BoxDecoration(
+                                        color: Get
+                                            .theme.colorScheme.primaryContainer,
+                                        borderRadius: BorderRadius.circular(4),
                                       ),
-                                      SizedBox(height: 4),
-                                      ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Get.theme.colorScheme
-                                              .secondaryContainer,
-                                        ),
-                                        onPressed: () async {
-                                          final Uri url = Uri.parse(
+                                      child: Column(
+                                        children: [
+                                          Text(
                                             stateController.uploadedFiles[index]
-                                                ["url"],
-                                          );
+                                                ["name"],
+                                            style: Get.textTheme.titleSmall!
+                                                .copyWith(
+                                              color: Get.theme.colorScheme
+                                                  .onPrimaryContainer,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 4),
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Get
+                                                  .theme
+                                                  .colorScheme
+                                                  .secondaryContainer,
+                                            ),
+                                            onPressed: () async {
+                                              final Uri url = Uri.parse(
+                                                stateController
+                                                        .uploadedFiles[index]
+                                                    ["url"],
+                                              );
 
-                                          if (!await launchUrl(url)) {
-                                            throw Exception(
-                                                'Could not launch $url');
-                                          }
-                                        },
-                                        child: Text("Download"),
+                                              if (!await launchUrl(url)) {
+                                                throw Exception(
+                                                    'Could not launch $url');
+                                              }
+                                            },
+                                            child: Text("Download"),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                    if (DateTime.parse(data["deadline"])
+                                            .compareTo(DateTime.now()) >
+                                        0)
+                                      GestureDetector(
+                                        onTap: () async {
+                                          stateController.deleteSubmissionFile(
+                                            stateController.uploadedFiles[index]
+                                                ["id"],
+                                          );
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.all(4),
+                                          decoration: BoxDecoration(
+                                            color:
+                                                Get.theme.colorScheme.onPrimary,
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                          ),
+                                          child: Icon(
+                                            Icons.delete,
+                                            size: 18,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
                                 );
                               }),
                         ),
