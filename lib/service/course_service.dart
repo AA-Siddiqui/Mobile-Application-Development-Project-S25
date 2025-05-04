@@ -13,7 +13,7 @@ class CourseService {
     return await _supabase
         .from("Assessment")
         .select(
-            "id, title, description, deadline, max, weight, type, AssessmentFile(name, url)")
+            "id, title, description, deadline, max, weight, type, AssessmentFile(id, name, url)")
         .eq('classId', classId);
   }
 

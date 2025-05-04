@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:project/pages/teacher_activity_list_page.dart';
 import 'package:project/pages/teacher_attendance_list_page.dart';
 import 'package:project/widgets/item_container.dart';
 
@@ -34,8 +35,8 @@ class TeacherCoursePage extends StatelessWidget {
               "action": () => Get.to(() => TeacherAttendanceListPage(data)),
             },
             {
-              "text": "Upload Assessment",
-              "action": () {},
+              "text": "Manage Assessment",
+              "action": () => Get.to(() => TeacherActivityListPage(data)),
             },
             {
               "text": "Grade",

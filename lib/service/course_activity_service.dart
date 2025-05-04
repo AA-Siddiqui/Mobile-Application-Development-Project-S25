@@ -87,4 +87,8 @@ class CourseActivityService {
   Future<void> deleteSubmissionFile(int submissionFileId) async {
     await _supabase.from("SubmissionFile").delete().eq("id", submissionFileId);
   }
+
+  Future<void> deleteAssessmentFile(int assessmentFileId) async {
+    await _supabase.from("assessmentFile").delete().eq("id", assessmentFileId);
+  }
 }
