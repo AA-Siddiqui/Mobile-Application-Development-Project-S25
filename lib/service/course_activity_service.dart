@@ -91,4 +91,71 @@ class CourseActivityService {
   Future<void> deleteAssessmentFile(int assessmentFileId) async {
     await _supabase.from("assessmentFile").delete().eq("id", assessmentFileId);
   }
+
+  Future<bool> addAssessment(
+    int? assessmentId,
+    String title,
+    String description,
+    String type,
+    DateTime? deadline,
+    int max,
+    int weight,
+    int classId,
+    List<PlatformFile> files,
+  ) async {
+    final assessmentResult = await _supabase
+        .from("Assessment")
+        .upsert(assessmentId != null
+            ? {
+                "id": assessmentId,
+                "title": title,
+                "description": description,
+                "deadline": deadline!.toIso8601String(),
+                "max": max,
+                "weight": weight,
+                "type": "Assignment",
+                "classId": classId,
+              }
+            : {
+                "title": title,
+                "description": description,
+                "deadline": deadline!.toIso8601String(),
+                "max": max,
+                "weight": weight,
+                "type": "Assignment",
+                "classId": classId,
+              })
+        .select("id");
+    final newAssessmentId = assessmentResult[0]["id"];
+
+    for (final file in files) {
+      final fileBytes = File(file.path!).readAsBytesSync();
+
+      final response = await _supabase.storage.from('submissions').uploadBinary(
+            'assessments/$newAssessmentId/${file.name}',
+            fileBytes,
+            fileOptions: FileOptions(
+              upsert: true,
+            ),
+          );
+
+      if (response.isNotEmpty) {
+        Toast.info(
+            "Upload Successful", "File ${file.name} uploaded successfully!");
+      } else {
+        Toast.error("Upload error", response);
+        return false;
+      }
+
+      await _supabase.from("AssessmentFile").insert({
+        "name": file.name,
+        "url": _supabase.storage
+            .from('assessments')
+            .getPublicUrl("assessments/$newAssessmentId/${file.name}"),
+        "assessmentId": newAssessmentId,
+      });
+    }
+    Toast.info("Success", "Assessment added successfully!");
+    return true;
+  }
 }

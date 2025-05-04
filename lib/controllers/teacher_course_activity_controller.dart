@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
 import 'package:project/service/supabase_service.dart';
 
@@ -18,13 +19,39 @@ class TeacherCourseActivityController extends GetxController {
   String get selectedType => selectedTypeRx.value;
   set selectedType(String value) => selectedTypeRx.value = value;
 
-  var deadlineRx = DateTime.now().obs;
-  DateTime get deadline => deadlineRx.value;
-  set deadline(DateTime value) => deadlineRx.value = value;
+  var deadlineRx = Rxn<DateTime>();
+  DateTime? get deadline => deadlineRx.value;
+  set deadline(DateTime? value) => deadlineRx.value = value;
+
+  var filesRx = <PlatformFile>[].obs;
+  // ignore: invalid_use_of_protected_member
+  List<PlatformFile> get files => filesRx.value;
+  set files(List<PlatformFile> value) => filesRx.value = value;
 
   Future<void> deleteAssessmentFile(int assessmentFileId) async {
     isUploading = true;
     await SupabaseService.courseActivity.deleteAssessmentFile(assessmentFileId);
     isUploading = false;
+  }
+
+  Future<bool> addAssessment(
+    int? assessmentId,
+    String title,
+    String description,
+    int max,
+    int weight,
+    int classId,
+  ) async {
+    return await SupabaseService.courseActivity.addAssessment(
+      assessmentId,
+      title,
+      description,
+      selectedType,
+      deadline,
+      max,
+      weight,
+      classId,
+      files,
+    );
   }
 }

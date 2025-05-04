@@ -111,6 +111,7 @@ class TeacherHomePage extends StatelessWidget {
                                             teacherHomeController
                                                 .classes[index],
                                           ),
+                                          arguments: "lol",
                                         ),
                                         child: Card(
                                           child: Container(

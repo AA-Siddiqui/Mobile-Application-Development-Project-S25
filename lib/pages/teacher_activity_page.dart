@@ -1,6 +1,9 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:project/controllers/teacher_course_activity_controller.dart';
+import 'package:project/utils/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TeacherActivityPage extends StatelessWidget {
@@ -8,19 +11,25 @@ class TeacherActivityPage extends StatelessWidget {
   final Map<String, dynamic>? data;
   late final int? assessmentId;
   TeacherActivityPage(this.classId, this.data, {super.key})
-      : assessmentId = data?["id"];
+      : assessmentId = data?["id"] {
+    if (data != null) {
+      stateController.selectedType = data?["type"] ?? "Assignment";
+      stateController.deadline = DateTime.parse(data?["deadline"]);
+    }
+  }
 
-  late final titleController = TextEditingController(text: data!["title"]);
+  late final titleController = TextEditingController(text: data?["title"]);
   late final descriptionController =
-      TextEditingController(text: data!["description"]);
+      TextEditingController(text: data?["description"]);
   late final deadlineController = TextEditingController(
-      text:
-          "${formatDate(data!["deadline"])} - ${formatTime(data!["deadline"])}");
+      text: data != null
+          ? "${formatDate(data?["deadline"])} - ${formatTime(data?["deadline"])}"
+          : null);
   late final maxMarksController =
-      TextEditingController(text: data!["max"].toString());
+      TextEditingController(text: data?["max"].toString());
   late final weightageController =
-      TextEditingController(text: data!["weight"].toString());
-  late final typeController = TextEditingController(text: data!["type"]);
+      TextEditingController(text: data?["weight"].toString());
+  late final typeController = TextEditingController(text: data?["type"]);
 
   final stateController = Get.put(TeacherCourseActivityController());
 
@@ -217,15 +226,38 @@ class TeacherActivityPage extends StatelessWidget {
                       ),
                       SizedBox(
                         height: 100,
-                        child: ListView.builder(
+                        child: Obx(() => ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: data?["AssessmentFile"].length + 1 ?? 1,
+                            itemCount: (data?["AssessmentFile"].length ?? 0) +
+                                (stateController.files.length) +
+                                1,
                             itemBuilder: (context, index) {
                               if (index == 0) {
                                 return GestureDetector(
-                                  onTap: () {
-                                    // TODO: HERE Upload file
-                                    // stateController.uploadAssessmentFile
+                                  onTap: () async {
+                                    final status =
+                                        await Permission.storage.request();
+                                    final hasPermission = status.isGranted;
+
+                                    if (!hasPermission) {
+                                      Toast.error(
+                                        "Storage permission denied",
+                                        "Go to settings to allow permission to access storage",
+                                      );
+                                      return;
+                                    }
+
+                                    final result =
+                                        await FilePicker.platform.pickFiles(
+                                      allowMultiple: true,
+                                    );
+
+                                    if (result == null) {
+                                      return;
+                                    }
+                                    for (final file in result.files) {
+                                      stateController.files.add(file);
+                                    }
                                   },
                                   child: Container(
                                     margin: EdgeInsets.only(
@@ -241,7 +273,21 @@ class TeacherActivityPage extends StatelessWidget {
                                   ),
                                 );
                               }
-                              final file = data!["AssessmentFile"][index - 1];
+                              late final Map<String, dynamic> file;
+                              if (index < stateController.files.length + 1) {
+                                final pf = stateController.files[index - 1];
+                                file = {
+                                  "name": pf.name,
+                                  "url": pf.path,
+                                  "local": true,
+                                };
+                              } else {
+                                file = data!["AssessmentFile"]
+                                    [index - stateController.files.length - 1];
+                              }
+                              for (var e in file.entries) {
+                                print("${e.key} ${e.value}");
+                              }
                               return Stack(
                                 alignment: Alignment.topRight,
                                 children: [
@@ -279,7 +325,7 @@ class TeacherActivityPage extends StatelessWidget {
 
                                             if (!await launchUrl(url)) {
                                               throw Exception(
-                                                  'Could not launch $url');
+                                                  'Could not launch ');
                                             }
                                           },
                                           child: Text("Download"),
@@ -292,11 +338,18 @@ class TeacherActivityPage extends StatelessWidget {
                                       0)
                                     GestureDetector(
                                       onTap: () async {
+                                        if (file['local']) {
+                                          stateController.files
+                                              .removeAt(index - 1);
+                                          return;
+                                        }
                                         stateController.deleteAssessmentFile(
                                           file["id"],
                                         );
-                                        data!["AssessmentFile"]
-                                            .removeAt(index - 1);
+
+                                        data!["AssessmentFile"].removeAt(index -
+                                            stateController.files.length -
+                                            1);
                                       },
                                       child: Container(
                                         padding: EdgeInsets.all(4),
@@ -314,15 +367,49 @@ class TeacherActivityPage extends StatelessWidget {
                                     ),
                                 ],
                               );
-                            }),
+                            })),
                       )
                     ],
                   ),
                 ),
               ),
               GestureDetector(
-                onTap: () {
-                  // TODO: HERE Submit the form
+                onTap: () async {
+                  if (titleController.text.isEmpty) {
+                    Toast.error("Title is required", "Enter title");
+                    return;
+                  }
+                  if (descriptionController.text.isEmpty) {
+                    Toast.error("Description is required", "Enter description");
+                    return;
+                  }
+                  if (maxMarksController.text.isEmpty) {
+                    Toast.error("Max marks is required", "Enter max marks");
+                    return;
+                  }
+                  if (weightageController.text.isEmpty) {
+                    Toast.error("Weightage is required", "Enter weightage");
+                    return;
+                  }
+                  if (stateController.deadline == null) {
+                    Toast.error("Deadline is required", "Select deadline");
+                    return;
+                  }
+                  if (stateController.files.isEmpty &&
+                      (data == null || data!["AssessmentFile"].isEmpty)) {
+                    Toast.error("Files are required", "Select files");
+                    return;
+                  }
+
+                  await stateController.addAssessment(
+                    assessmentId,
+                    titleController.text,
+                    descriptionController.text,
+                    int.parse(maxMarksController.text),
+                    int.parse(weightageController.text),
+                    classId,
+                  );
+                  Get.until((route) => route.settings.arguments == 'lol');
                 },
                 child: Container(
                   width: double.infinity,
