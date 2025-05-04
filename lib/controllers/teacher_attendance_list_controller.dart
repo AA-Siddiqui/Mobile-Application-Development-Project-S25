@@ -61,11 +61,13 @@ class TeacherAttendanceListController extends GetxController {
 
     schedules = data.map((schedule) {
       return {
+        "id": schedule["id"],
         "date": _formatDate(schedule["startTime"]),
         "startTime": _formatTime(schedule["startTime"]),
         "endTime": _formatTime(schedule["endTime"]),
         "attendance": schedule["Attendance"].map((student) {
           return {
+            "id": student["id"],
             "studentId": student["Student"]["id"],
             "studentName": student["Student"]["User"]["name"],
             "rollNo": student["Student"]["rollNo"],

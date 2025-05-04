@@ -70,6 +70,7 @@ class StudentCourseActivityPageController extends GetxController {
     isUploading = false;
   }
 
+  /// TODO: Check if this is correct
   Future<void> deleteSubmissionFile(int submissionFileId) async {
     isUploading = true;
     await SupabaseService.courseActivity.deleteSubmissionFile(submissionFileId);

@@ -126,7 +126,21 @@ class CourseService {
     return await _supabase
         .from("Schedule")
         .select(
-            "startTime, endTime, Attendance(present, Student(id, rollNo, User(name)))")
+            "id, startTime, endTime, Attendance(id, present, Student(id, rollNo, User(name)))")
         .eq("classId", classId);
+  }
+
+  Future<void> markAttendance(
+    int attendanceId,
+    int scheduleId,
+    int studentId,
+    bool present,
+  ) async {
+    await _supabase.from("Attendance").upsert({
+      "id": attendanceId,
+      "scheduleId": scheduleId,
+      "studentId": studentId,
+      "present": present,
+    });
   }
 }
