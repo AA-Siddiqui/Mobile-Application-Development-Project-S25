@@ -22,4 +22,11 @@ class TeacherCourseActivityListController extends GetxController {
         await SupabaseService.course.getCourseActivities(classId);
     isLoading = false;
   }
+
+  void deleteActivity(int assessmentId) async {
+    isLoading = true;
+    await SupabaseService.course.deleteActivity(assessmentId);
+    courseActivities.removeWhere((element) => element["id"] == assessmentId);
+    isLoading = false;
+  }
 }

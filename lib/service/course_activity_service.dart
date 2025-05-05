@@ -113,7 +113,7 @@ class CourseActivityService {
                 "deadline": deadline!.toIso8601String(),
                 "max": max,
                 "weight": weight,
-                "type": "Assignment",
+                "type": type,
                 "classId": classId,
               }
             : {
@@ -122,7 +122,7 @@ class CourseActivityService {
                 "deadline": deadline!.toIso8601String(),
                 "max": max,
                 "weight": weight,
-                "type": "Assignment",
+                "type": type,
                 "classId": classId,
               })
         .select("id");

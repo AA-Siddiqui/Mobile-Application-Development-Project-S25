@@ -71,19 +71,6 @@ class TeacherActivityPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // for (var e in data!.entries) {
-    //   print("object ${e.key} ${e.value}");
-    // }
-    /*
-    id 2
-    title Assignment 2
-    description Learn loops, conditionals.
-    deadline 2025-05-15T07:00:00+00:00
-    max 10
-    weight 2
-    type Assignment
-    AssessmentFile [{url: https://taakgxjwqeqziijeyoij.supabase.co/storage/v1/object/public/submissions/assessments/2/SampleVideo_1280x720_1mb.mp4, name: SampleVideo_1280x720_1mb.mp4}]
-    */
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -233,6 +220,7 @@ class TeacherActivityPage extends StatelessWidget {
                                 1,
                             itemBuilder: (context, index) {
                               if (index == 0) {
+                                // FIXME: Instant local files
                                 return GestureDetector(
                                   onTap: () async {
                                     final status =
@@ -284,9 +272,6 @@ class TeacherActivityPage extends StatelessWidget {
                               } else {
                                 file = data!["AssessmentFile"]
                                     [index - stateController.files.length - 1];
-                              }
-                              for (var e in file.entries) {
-                                print("${e.key} ${e.value}");
                               }
                               return Stack(
                                 alignment: Alignment.topRight,
@@ -395,11 +380,13 @@ class TeacherActivityPage extends StatelessWidget {
                     Toast.error("Deadline is required", "Select deadline");
                     return;
                   }
-                  if (stateController.files.isEmpty &&
-                      (data == null || data!["AssessmentFile"].isEmpty)) {
-                    Toast.error("Files are required", "Select files");
-                    return;
-                  }
+                  // if (["Project", "Assignment"]
+                  //         .contains(stateController.selectedType) &&
+                  //     (stateController.files.isEmpty &&
+                  //         (data == null || data!["AssessmentFile"].isEmpty))) {
+                  //   Toast.error("Files are required", "Select files");
+                  //   return;
+                  // }
 
                   await stateController.addAssessment(
                     assessmentId,

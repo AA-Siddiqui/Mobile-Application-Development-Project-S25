@@ -40,7 +40,8 @@ class TeacherCoursePage extends StatelessWidget {
             },
             {
               "text": "Grade",
-              "action": () {},
+              "action": () => Get.to(
+                  () => TeacherActivityListPage(data, gradingMode: true)),
             },
           ]
               .map(

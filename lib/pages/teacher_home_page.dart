@@ -78,6 +78,7 @@ class TeacherHomePage extends StatelessWidget {
                                         Get.theme.textTheme.bodyLarge?.copyWith(
                                       color: Get
                                           .theme.colorScheme.onPrimaryContainer,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   )),
                               Obx(() => Text(

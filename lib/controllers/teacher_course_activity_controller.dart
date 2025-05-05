@@ -42,7 +42,8 @@ class TeacherCourseActivityController extends GetxController {
     int weight,
     int classId,
   ) async {
-    return await SupabaseService.courseActivity.addAssessment(
+    isLoading = true;
+    final data = await SupabaseService.courseActivity.addAssessment(
       assessmentId,
       title,
       description,
@@ -53,5 +54,7 @@ class TeacherCourseActivityController extends GetxController {
       classId,
       files,
     );
+    isLoading = false;
+    return data;
   }
 }

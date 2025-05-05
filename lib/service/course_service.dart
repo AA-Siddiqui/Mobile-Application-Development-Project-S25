@@ -143,4 +143,8 @@ class CourseService {
       "present": present,
     });
   }
+
+  Future<void> deleteActivity(int assessmentId) async {
+    await _supabase.from("Assessment").delete().eq("id", assessmentId);
+  }
 }
