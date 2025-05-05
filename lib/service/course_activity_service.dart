@@ -158,4 +158,16 @@ class CourseActivityService {
     Toast.info("Success", "Assessment added successfully!");
     return true;
   }
+
+  Future<List<Map<String, dynamic>>> getGradingDetails(
+    int assessmentId,
+    int classId,
+  ) async {
+    return await _supabase
+        .from("Enrollment")
+        .select(
+            "Student(id, rollNo, User(name)), Class(Assessment(Submission(marks)))")
+        .eq("classId", classId)
+        .eq("Class.Assessment.id", assessmentId);
+  }
 }

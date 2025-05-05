@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project/controllers/teacher_course_activity_list_controller.dart';
 import 'package:project/pages/teacher_activity_page.dart';
+import 'package:project/pages/teacher_grading_page.dart';
 import 'package:project/widgets/item_container.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -43,9 +44,53 @@ class TeacherActivityListPage extends StatelessWidget {
                 () => Skeletonizer(
                   enabled: stateController.isLoading,
                   child: ListView.builder(
-                    itemCount: stateController.courseActivities.length,
+                    itemCount: stateController.isLoading
+                        ? 4
+                        : stateController.courseActivities.length,
                     itemBuilder: (context, index) {
+                      if (stateController.isLoading) {
+                        return ItemContainer(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Lorem Ipsum dolor sit amet",
+                                    style: Get.textTheme.titleMedium!.copyWith(
+                                      color: Get.theme.colorScheme.primary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    "Lorem Ipsum dolor sit amet",
+                                    style: Get.textTheme.titleSmall,
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Text(
+                                    "Lorem Ipsum",
+                                    style: Get.textTheme.bodyMedium!.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    "Lorem Ipsum",
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      }
                       return Dismissible(
+                        direction: gradingMode
+                            ? DismissDirection.none
+                            : DismissDirection.horizontal,
                         key: Key(stateController.courseActivities[index]["id"]
                             .toString()),
                         background: Container(
@@ -85,7 +130,12 @@ class TeacherActivityListPage extends StatelessWidget {
                         },
                         child: GestureDetector(
                           onTap: () => gradingMode
-                              ? null // TODO: WORK HERE
+                              ? Get.to(
+                                  () => TeacherGradingPage(
+                                    data["id"],
+                                    stateController.courseActivities[index],
+                                  ),
+                                )
                               : [
                                   "Assignment",
                                   "Project",
@@ -93,9 +143,9 @@ class TeacherActivityListPage extends StatelessWidget {
                                       .courseActivities[index]["type"])
                                   ? Get.to(
                                       () => TeacherActivityPage(
-                                          data["id"],
-                                          stateController
-                                              .courseActivities[index]),
+                                        data["id"],
+                                        stateController.courseActivities[index],
+                                      ),
                                     )
                                   : null,
                           child: ItemContainer(
