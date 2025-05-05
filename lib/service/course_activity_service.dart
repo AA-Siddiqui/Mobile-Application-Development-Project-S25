@@ -166,8 +166,24 @@ class CourseActivityService {
     return await _supabase
         .from("Enrollment")
         .select(
-            "Student(id, rollNo, User(name)), Class(Assessment(Submission(marks)))")
+            "Student(id, rollNo, User(name)), Class(Assessment(max, Submission(id, marks)))")
         .eq("classId", classId)
         .eq("Class.Assessment.id", assessmentId);
+  }
+
+  Future<int> updateMarks(
+    int marks,
+    int assessmentId,
+    int studentId,
+    int? submissionId,
+  ) async {
+    final data = {
+      if (submissionId != null) "id": submissionId,
+      "assessmentId": assessmentId,
+      "studentId": studentId,
+      "marks": marks,
+    };
+    return (await _supabase.from("Submission").upsert(data).select("id"))[0]
+        ["id"];
   }
 }

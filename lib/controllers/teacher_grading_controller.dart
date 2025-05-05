@@ -24,18 +24,36 @@ class TeacherGradingController extends GetxController {
     final data = await SupabaseService.courseActivity
         .getGradingDetails(assessmentId, classId);
     gradeList = data.map((action) {
-      action["Student"]["name"] = action["Student"]["User"]["name"];
-      action["Student"].removeWhere((key, value) => key == "User");
-      action["Student"]["marks"] =
-          action["Class"]["Assessment"][0]["Submission"].isNotEmpty
-              ? action["Class"]["Assessment"][0]["Submission"][0]["marks"]
-              : 0;
-      action["Class"].removeWhere((key, value) => key == "User");
-      action = action["Student"];
-      action["studentId"] = action["id"];
-      action.removeWhere((key, value) => key == "id");
-      return action;
+      return {
+        "studentId": action["Student"]["id"],
+        "name": action["Student"]["User"]["name"],
+        "rollNo": action["Student"]["rollNo"],
+        "max": action["Class"]["Assessment"][0]["max"],
+        "marks": action["Class"]["Assessment"][0]["Submission"].isNotEmpty
+            ? action["Class"]["Assessment"][0]["Submission"][0]["marks"]
+            : 0,
+        "submissionMade":
+            action["Class"]["Assessment"][0]["Submission"].isNotEmpty,
+        "submissionId":
+            action["Class"]["Assessment"][0]["Submission"].isNotEmpty
+                ? action["Class"]["Assessment"][0]["Submission"][0]["id"]
+                : null,
+      };
     }).toList();
     isLoading = false;
+  }
+
+  Future<int> updateMarks(
+    int marks,
+    int assessmentId,
+    int studentId,
+    int? submissionId,
+  ) async {
+    return await SupabaseService.courseActivity.updateMarks(
+      marks,
+      assessmentId,
+      studentId,
+      submissionId,
+    );
   }
 }
