@@ -10,6 +10,14 @@ class TeacherGradingController extends GetxController {
     getStudentList(classId, assessmentId);
   }
 
+  var requestCountRx = 0.obs;
+  int get requestCount => requestCountRx.value;
+  set requestCount(int value) => requestCountRx.value = value;
+
+  var requestDoneRx = 0.obs;
+  int get requestDone => requestDoneRx.value;
+  set requestDone(int value) => requestDoneRx.value = value;
+
   var isLoadingRx = false.obs;
   bool get isLoading => isLoadingRx.value;
   set isLoading(bool value) => isLoadingRx.value = value;

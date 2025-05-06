@@ -30,6 +30,21 @@ class TeacherGradingPage extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: Obx(
+              () => stateController.requestCount == stateController.requestDone
+                  ? Icon(Icons.check)
+                  : CircularProgressIndicator(
+                      value: stateController.requestCount == 1
+                          ? null
+                          : stateController.requestDone /
+                              stateController.requestCount,
+                    ),
+            ),
+          ),
+        ],
       ),
       body: Obx(() {
         return Padding(
@@ -89,10 +104,10 @@ class TeacherGradingPage extends StatelessWidget {
             SizedBox(
               width: Get.width * 0.2,
               child: DebouncedTextField(
-                submissionMade: submissionMade,
                 marks: marks,
                 max: data["max"],
                 action: (newMarks) async {
+                  stateController.requestCount++;
                   stateController.gradeList[index]["submissionId"] =
                       await stateController.updateMarks(
                     newMarks,
@@ -100,7 +115,13 @@ class TeacherGradingPage extends StatelessWidget {
                     studentId,
                     stateController.gradeList[index]["submissionId"],
                   );
-                  // FIXME: Add an indicator to show that the marks have been updated in the appbar
+                  stateController.requestDone++;
+
+                  if (stateController.requestCount ==
+                      stateController.requestDone) {
+                    stateController.requestCount = 0;
+                    stateController.requestDone = 0;
+                  }
                 },
               ),
             ),
@@ -112,7 +133,6 @@ class TeacherGradingPage extends StatelessWidget {
 class DebouncedTextField extends StatefulWidget {
   final int marks;
   final int max;
-  final bool submissionMade;
   final Future<void> Function(int) action;
 
   const DebouncedTextField({
@@ -120,7 +140,6 @@ class DebouncedTextField extends StatefulWidget {
     required this.marks,
     required this.max,
     required this.action,
-    required this.submissionMade,
   });
 
   @override
@@ -132,6 +151,7 @@ class _DebouncedTextFieldState extends State<DebouncedTextField> {
   late FocusNode _focusNode;
   Timer? _debounce;
   bool _isUpdating = false;
+  String _previous = "";
 
   @override
   void initState() {
@@ -158,9 +178,15 @@ class _DebouncedTextFieldState extends State<DebouncedTextField> {
   }
 
   void _onChanged(String value) {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    if (_debounce?.isActive ?? false) {
+      _debounce!.cancel();
+    }
 
-    if (value.isEmpty || int.parse(value) > widget.max) {
+    if (value.isEmpty) {
+      return;
+    }
+
+    if (int.parse(value) > widget.max) {
       Toast.error(
         "Invalid",
         "Assigned marks can't be greater than the maximum",
@@ -181,22 +207,29 @@ class _DebouncedTextFieldState extends State<DebouncedTextField> {
   }
 
   Future<void> _updateMarks(String value) async {
+    if (_previous == value) return;
     if (_isUpdating) return;
 
     final int? newMarks = int.tryParse(value);
     if (newMarks == null) return;
 
-    _isUpdating = true;
+    setState(() {
+      _isUpdating = true;
+    });
     try {
       await widget.action(newMarks);
+      _previous = value;
     } finally {
-      _isUpdating = false;
+      setState(() {
+        _isUpdating = false;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      textAlign: TextAlign.end,
       enabled: !_isUpdating,
       keyboardType: const TextInputType.numberWithOptions(
         decimal: false,
