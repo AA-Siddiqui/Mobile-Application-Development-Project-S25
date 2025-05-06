@@ -220,7 +220,6 @@ class TeacherActivityPage extends StatelessWidget {
                                 1,
                             itemBuilder: (context, index) {
                               if (index == 0) {
-                                // FIXME: Instant local files
                                 return GestureDetector(
                                   onTap: () async {
                                     final status =
@@ -246,6 +245,8 @@ class TeacherActivityPage extends StatelessWidget {
                                     for (final file in result.files) {
                                       stateController.files.add(file);
                                     }
+                                    stateController.files =
+                                        stateController.files;
                                   },
                                   child: Container(
                                     margin: EdgeInsets.only(
@@ -318,38 +319,41 @@ class TeacherActivityPage extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  if (DateTime.parse(data?["deadline"])
-                                          .compareTo(DateTime.now()) >
-                                      0)
-                                    GestureDetector(
-                                      onTap: () async {
-                                        if (file['local']) {
-                                          stateController.files
-                                              .removeAt(index - 1);
-                                          return;
-                                        }
-                                        stateController.deleteAssessmentFile(
-                                          file["id"],
+                                  GestureDetector(
+                                    onTap: () async {
+                                      if (file['local']) {
+                                        stateController.files.removeWhere(
+                                          (localFile) =>
+                                              file['name'] == localFile.name,
                                         );
 
-                                        data!["AssessmentFile"].removeAt(index -
-                                            stateController.files.length -
-                                            1);
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.all(4),
-                                        decoration: BoxDecoration(
-                                          color:
-                                              Get.theme.colorScheme.onPrimary,
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                        ),
-                                        child: Icon(
-                                          Icons.delete,
-                                          size: 18,
-                                        ),
+                                        stateController.files = stateController
+                                            .files
+                                            .map((file) => file)
+                                            .toList();
+
+                                        return;
+                                      }
+                                      stateController.deleteAssessmentFile(
+                                        file["id"],
+                                      );
+
+                                      data!["AssessmentFile"].removeAt(index -
+                                          stateController.files.length -
+                                          1);
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.all(4),
+                                      decoration: BoxDecoration(
+                                        color: Get.theme.colorScheme.onPrimary,
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      child: Icon(
+                                        Icons.delete,
+                                        size: 18,
                                       ),
                                     ),
+                                  ),
                                 ],
                               );
                             })),

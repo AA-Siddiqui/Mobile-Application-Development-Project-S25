@@ -53,13 +53,20 @@ class UserService {
         .maybeSingle();
   }
 
-  Future<List<Map<String, dynamic>>> getClassDetails(int roleId) async {
-    // TODO: check if this is correct
+  Future<List<Map<String, dynamic>>> getClassDetails(int studentId) async {
+    /// previously
+    /// return await _supabase
+    /// .from("Enrollment")
+    /// .select(
+    ///     "Class(id, Course(name), Teacher(User(name)), Schedule(Attendance(present)), term, section)")
+    /// .eq("studentId", studentId)
+    ///
     return await _supabase
         .from("Enrollment")
         .select(
             "Class(id, Course(name), Teacher(User(name)), Schedule(Attendance(present)), term, section)")
-        .eq("studentId", roleId);
+        .eq("studentId", studentId)
+        .eq("Class.Schedule.Attendance.studentId", studentId);
   }
 
   Future<void> signUp(
