@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project/controllers/teacher_grading_controller.dart';
 import 'package:project/utils/toast.dart';
+import 'package:project/widgets/debounced_text_field.dart';
 import 'package:project/widgets/item_container.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -21,6 +22,42 @@ class TeacherGradingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(
+          onPressed: () {
+            if (stateController.requestCount == stateController.requestDone) {
+              Get.back();
+              return;
+            }
+            Get.dialog(AlertDialog(
+              title: const Text("Unsaved Changes"),
+              content: const Text(
+                "You have unsaved changes. Please wait!",
+              ),
+              actions: [
+                Obx(
+                  () => stateController.requestCount !=
+                          stateController.requestDone
+                      ? CircularProgressIndicator(
+                          value: stateController.requestCount == 1
+                              ? null
+                              : stateController.requestDone /
+                                  stateController.requestCount,
+                        )
+                      : TextButton(
+                          onPressed: () {},
+                          child: () {
+                            Future.delayed(Duration.zero, () {
+                              Get.back();
+                              Get.back();
+                            });
+                            return Text("OK");
+                          }(),
+                        ),
+                ),
+              ],
+            ));
+          },
+        ),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         title: Text(
@@ -104,9 +141,15 @@ class TeacherGradingPage extends StatelessWidget {
             SizedBox(
               width: Get.width * 0.2,
               child: DebouncedTextField(
-                marks: marks,
-                max: data["max"],
+                initialValue: marks == 0 ? "" : marks.toString(),
                 action: (newMarks) async {
+                  if (newMarks > data["max"]) {
+                    Toast.error(
+                      "Invalid",
+                      "Assigned marks can't be greater than the maximum",
+                    );
+                    return;
+                  }
                   stateController.requestCount++;
                   stateController.gradeList[index]["submissionId"] =
                       await stateController.updateMarks(
@@ -128,117 +171,4 @@ class TeacherGradingPage extends StatelessWidget {
           ],
         ),
       );
-}
-
-class DebouncedTextField extends StatefulWidget {
-  final int marks;
-  final int max;
-  final Future<void> Function(int) action;
-
-  const DebouncedTextField({
-    super.key,
-    required this.marks,
-    required this.max,
-    required this.action,
-  });
-
-  @override
-  State<DebouncedTextField> createState() => _DebouncedTextFieldState();
-}
-
-class _DebouncedTextFieldState extends State<DebouncedTextField> {
-  late TextEditingController _controller;
-  late FocusNode _focusNode;
-  Timer? _debounce;
-  bool _isUpdating = false;
-  String _previous = "";
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(
-      text: widget.marks == 0 ? "" : widget.marks.toString(),
-    );
-    _focusNode = FocusNode();
-
-    // Trigger update on focus loss
-    _focusNode.addListener(() {
-      if (!_focusNode.hasFocus) {
-        _updateMarks(_controller.text);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _focusNode.dispose();
-    _debounce?.cancel();
-    super.dispose();
-  }
-
-  void _onChanged(String value) {
-    if (_debounce?.isActive ?? false) {
-      _debounce!.cancel();
-    }
-
-    if (value.isEmpty) {
-      return;
-    }
-
-    if (int.parse(value) > widget.max) {
-      Toast.error(
-        "Invalid",
-        "Assigned marks can't be greater than the maximum",
-      );
-      return;
-    }
-
-    _debounce = Timer(const Duration(seconds: 5), () {
-      if (!_isUpdating) {
-        _updateMarks(value.isEmpty ? "0" : value);
-      }
-    });
-  }
-
-  void _onSubmitted(String value) {
-    _debounce?.cancel(); // Cancel pending debounce
-    _updateMarks(value); // Immediate update on Enter
-  }
-
-  Future<void> _updateMarks(String value) async {
-    if (_previous == value) return;
-    if (_isUpdating) return;
-
-    final int? newMarks = int.tryParse(value);
-    if (newMarks == null) return;
-
-    setState(() {
-      _isUpdating = true;
-    });
-    try {
-      await widget.action(newMarks);
-      _previous = value;
-    } finally {
-      setState(() {
-        _isUpdating = false;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      textAlign: TextAlign.end,
-      enabled: !_isUpdating,
-      keyboardType: const TextInputType.numberWithOptions(
-        decimal: false,
-        signed: false,
-      ),
-      controller: _controller,
-      focusNode: _focusNode,
-      onChanged: _onChanged,
-      onSubmitted: _onSubmitted,
-    );
-  }
 }
