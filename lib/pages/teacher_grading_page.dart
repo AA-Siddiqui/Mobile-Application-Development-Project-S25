@@ -86,22 +86,53 @@ class TeacherGradingPage extends StatelessWidget {
       body: Obx(() {
         return Padding(
           padding: const EdgeInsets.all(12),
-          child: Skeletonizer(
-            enabled: stateController.isLoading,
-            child: ListView.builder(
-                itemCount: stateController.isLoading
-                    ? 4
-                    : stateController.gradeList.length,
-                itemBuilder: (context, index) => stateController.isLoading
-                    ? itemBuilder(index)
-                    : itemBuilder(
-                        index,
-                        stateController.gradeList[index]["studentId"],
-                        stateController.gradeList[index]["name"],
-                        stateController.gradeList[index]["rollNo"],
-                        stateController.gradeList[index]["marks"],
-                        stateController.gradeList[index]["submissionMade"],
-                      )),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              ItemContainer(
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Total Marks",
+                      style: Get.textTheme.titleLarge!.copyWith(
+                        color: Get.theme.colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      "${data["max"]}",
+                      style: Get.textTheme.titleLarge!.copyWith(
+                        color: Get.theme.colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Skeletonizer(
+                  enabled: stateController.isLoading,
+                  child: ListView.builder(
+                      itemCount: stateController.isLoading
+                          ? 4
+                          : stateController.gradeList.length,
+                      itemBuilder: (context, index) => stateController.isLoading
+                          ? itemBuilder(index)
+                          : itemBuilder(
+                              index,
+                              stateController.gradeList[index]["studentId"],
+                              stateController.gradeList[index]["name"],
+                              stateController.gradeList[index]["rollNo"],
+                              stateController.gradeList[index]["marks"],
+                              stateController.gradeList[index]
+                                  ["submissionMade"],
+                            )),
+                ),
+              ),
+            ],
           ),
         );
       }),

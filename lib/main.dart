@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/controllers/auth_controller.dart';
+import 'package:project/controllers/connection_controller.dart';
 import 'package:project/pages/splash_page.dart';
 import 'package:project/theme.dart';
 import 'package:project/utils/auth_checker.dart';
@@ -16,6 +17,7 @@ void main() async {
     anonKey: supabaseAnonKey,
   );
   Get.put(AuthController());
+  Get.put(ConnectionController());
 
   runApp(const MainApp());
 }
