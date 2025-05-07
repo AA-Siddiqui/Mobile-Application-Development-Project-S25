@@ -7,6 +7,7 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
+        backgroundColor: Color.fromRGBO(29, 95, 145, 1),
         body: Center(
           child: SizedBox(
             width: Get.mediaQuery.size.width * val,
