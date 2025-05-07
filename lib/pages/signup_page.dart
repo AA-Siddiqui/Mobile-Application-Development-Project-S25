@@ -32,7 +32,7 @@ class SignupPage extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 16),
-                  child: Image.asset("assets/logo.png"),
+                  child: Image.asset("assets/logo-transparent.png"),
                   // child: Text(
                   //   "UMS",
                   //   style: TextStyle(

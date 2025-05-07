@@ -32,7 +32,7 @@ class LoginPage extends StatelessWidget {
                   //     fontWeight: FontWeight.bold,
                   //   ),
                   // ),
-                  child: Image.asset("assets/logo.png"),
+                  child: Image.asset("assets/logo-transparent.png"),
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
