@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project/service/supabase_service.dart';
-import 'package:project/utils/email_validator.dart';
 import 'package:project/utils/toast.dart';
 import 'dart:core';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -134,7 +133,7 @@ class _SupaEmailAuthState extends State<SupaForgetAuth> {
               validator: (value) {
                 if (value == null ||
                     value.isEmpty ||
-                    !EmailValidator.validate(_emailController.text)) {
+                    !GetUtils.isEmail(_emailController.text)) {
                   return "Please enter a valid email address";
                 }
                 return null;
