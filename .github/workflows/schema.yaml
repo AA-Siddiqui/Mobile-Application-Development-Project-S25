@@ -1,0 +1,34 @@
+# .github/workflows/export-supabase-schema.yml
+
+name: Export Supabase Schema
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  export-schema:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Supabase CLI
+        run: npm install -g supabase
+
+      - name: Export Supabase SQL schema
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          mkdir -p supabase/schema
+          supabase db dump --db-url "$SUPABASE_DB_URL" > supabase/schema/schema.sql
+
+      - name: Commit exported schema
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add supabase/schema/schema.sql
+          git diff --cached --quiet && echo "No changes to commit" || (git commit -m "Update Supabase schema export" && git push)
