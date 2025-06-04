@@ -23,10 +23,10 @@ jobs:
 
       - name: Dump Supabase schema only
         env:
-          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_DB_URL }}
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_DB_PASSWORD }}
         run: |
           mkdir -p supabase
-          npx supabase db dump --file supabase/schema.sql --db-url $SUPABASE_PROJECT_REF
+          npx supabase db dump --file supabase/schema.sql --db-url postgresql://postgres:${SUPABASE_PROJECT_REF}@db.taakgxjwqeqziijeyoij.supabase.co:5432/postgres
 
       - name: Commit and push schema changes
         run: |
