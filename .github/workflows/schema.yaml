@@ -28,16 +28,8 @@ jobs:
           mkdir -p supabase
           npx supabase db dump --file supabase/schema.sql --db-url postgresql://postgres.taakgxjwqeqziijeyoij:${SUPABASE_PROJECT_REF}@aws-0-us-west-1.pooler.supabase.com:6543/postgres
 
-      - name: Commit and push schema changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          git add supabase/schema.sql
-
-          if git diff --cached --quiet; then
-            echo "No changes detected in schema."
-          else
-            git commit -m "chore: update Supabase schema dump"
-            git push
-          fi
+      - name: Upload schema.sql as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: supabase-schema
+          path: supabase/schema.sql
