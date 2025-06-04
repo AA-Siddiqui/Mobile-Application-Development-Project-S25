@@ -1,38 +1,42 @@
-name: Export Supabase Schema
+name: Dump Supabase Schema
 
 on:
   workflow_dispatch:
 
 jobs:
   dump-schema:
-    name: Dump Supabase Schema
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    - name: Checkout repo
+      uses: actions/checkout@v3
 
-      - name: Install Supabase CLI
-        run: |
-          curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-          sudo apt-get install -y nodejs
-          npm install -g supabase
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
 
-      - name: Set up Supabase credentials
-        run: |
-          supabase login --access-token "${{ secrets.SUPABASE_ACCESS_TOKEN }}"
+    - name: Install Supabase CLI
+      run: npm install -g supabase
 
-      - name: Dump schema (no data)
-        run: |
-          mkdir -p supabase
-          supabase db dump \
-            --db-url "${{ secrets.SUPABASE_DB_URL }}" \
-            --file supabase/schema.sql
+    - name: Restore Supabase config
+      run: |
+        mkdir -p ~/.supabase
+        echo "${{ secrets.SUPABASE_ACCESS_TOKEN }}" > ~/.supabase/access-token
 
-      - name: Commit and push schema
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add supabase/schema.sql
-          git commit -m "chore: update Supabase schema dump" || echo "No changes to commit"
-          git push
+    - name: Link Supabase project (optional if config is committed)
+      run: |
+        supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+
+    - name: Dump schema
+      run: |
+        mkdir -p supabase
+        supabase db dump --schema-only --file supabase/schema.sql
+
+    - name: Commit schema changes
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add supabase/schema.sql
+        git commit -m "chore: update Supabase schema" || echo "No changes to commit"
+        git push
