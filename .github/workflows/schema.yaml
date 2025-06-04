@@ -11,13 +11,16 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
+    - name: Install jq (to parse JSON)
+      run: sudo apt-get update && sudo apt-get install -y jq
 
     - name: Install Supabase CLI
-      run: npm install -g supabase
+      run: |
+        SUPABASE_CLI_VERSION=$(curl -s https://api.github.com/repos/supabase/cli/releases/latest | jq -r .tag_name)
+        curl -L "https://github.com/supabase/cli/releases/download/${SUPABASE_CLI_VERSION}/supabase_${SUPABASE_CLI_VERSION#v}_linux_amd64.tar.gz" -o supabase.tar.gz
+        tar -xzf supabase.tar.gz supabase
+        sudo mv supabase /usr/local/bin/
+        supabase --version
 
     - name: Restore Supabase config
       run: |
@@ -25,8 +28,7 @@ jobs:
         echo "${{ secrets.SUPABASE_ACCESS_TOKEN }}" > ~/.supabase/access-token
 
     - name: Link Supabase project (optional if config is committed)
-      run: |
-        supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+      run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
 
     - name: Dump schema
       run: |
