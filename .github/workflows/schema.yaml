@@ -26,6 +26,8 @@ jobs:
         run: npx supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
 
       - name: Pull Supabase schema
+        env:
+          PGPASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
         run: npx supabase db pull
 
       - name: Commit and push changes
