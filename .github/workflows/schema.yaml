@@ -1,44 +1,43 @@
-name: Dump Supabase Schema
+name: Supabase Schema Sync
 
 on:
   workflow_dispatch:
 
 jobs:
-  dump-schema:
+  sync-schema:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Install jq (to parse JSON)
-      run: sudo apt-get update && sudo apt-get install -y jq
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-    - name: Install Supabase CLI
-      run: |
-        SUPABASE_CLI_VERSION=$(curl -s https://api.github.com/repos/supabase/cli/releases/latest | jq -r .tag_name)
-        curl -L "https://github.com/supabase/cli/releases/download/${SUPABASE_CLI_VERSION}/supabase_${SUPABASE_CLI_VERSION#v}_linux_amd64.tar.gz" -o supabase.tar.gz
-        tar -xzf supabase.tar.gz supabase
-        sudo mv supabase /usr/local/bin/
-        supabase --version
+      - name: Login with Supabase access token
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          npx supabase login --access-token $SUPABASE_ACCESS_TOKEN
 
-    - name: Restore Supabase config
-      run: |
-        mkdir -p ~/.supabase
-        echo "${{ secrets.SUPABASE_ACCESS_TOKEN }}" > ~/.supabase/access-token
+      - name: Dump Supabase schema only
+        env:
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          mkdir -p supabase
+          npx supabase db dump --schema-only --file supabase/schema.sql --project-ref $SUPABASE_PROJECT_REF
 
-    - name: Link Supabase project (optional if config is committed)
-      run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+      - name: Commit and push schema changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-    - name: Dump schema
-      run: |
-        mkdir -p supabase
-        supabase db dump --schema-only --file supabase/schema.sql
+          git add supabase/schema.sql
 
-    - name: Commit schema changes
-      run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add supabase/schema.sql
-        git commit -m "chore: update Supabase schema" || echo "No changes to commit"
-        git push
+          if git diff --cached --quiet; then
+            echo "No changes detected in schema."
+          else
+            git commit -m "chore: update Supabase schema dump"
+            git push
+          fi
