@@ -1,39 +1,38 @@
-name: Pull Supabase Schema
+name: Export Supabase Schema
 
 on:
   workflow_dispatch:
 
 jobs:
-  pull-schema:
+  dump-schema:
+    name: Dump Supabase Schema
     runs-on: ubuntu-latest
-    name: Pull Supabase Schema and Commit
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install Supabase CLI locally
-        run: npm install supabase --save-dev
-
-      - name: Login to Supabase
-        run: npx supabase login --token ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-
-      - name: Link to Supabase project
-        run: npx supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
-
-      - name: Pull Supabase schema
-        env:
-          PGPASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-        run: npx supabase db pull
-
-      - name: Commit and push changes
+      - name: Install Supabase CLI
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git diff-index --quiet HEAD || git commit -m "chore: update Supabase schema"
+          curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+          sudo apt-get install -y nodejs
+          npm install -g supabase
+
+      - name: Set up Supabase credentials
+        run: |
+          supabase login --access-token "${{ secrets.SUPABASE_ACCESS_TOKEN }}"
+
+      - name: Dump schema (no data)
+        run: |
+          mkdir -p supabase
+          supabase db dump \
+            --db-url "${{ secrets.SUPABASE_DB_URL }}" \
+            --file supabase/schema.sql
+
+      - name: Commit and push schema
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add supabase/schema.sql
+          git commit -m "chore: update Supabase schema dump" || echo "No changes to commit"
           git push
