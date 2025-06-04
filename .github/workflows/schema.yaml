@@ -1,4 +1,4 @@
-name: Export Supabase Schema
+name: Pull Supabase Schema
 
 on:
   workflow_dispatch:
@@ -6,28 +6,27 @@ on:
 jobs:
   pull-schema:
     runs-on: ubuntu-latest
-    name: Export Supabase Schema and Commit
+    name: Pull Supabase Schema and Commit
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js (required for Supabase CLI)
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install Supabase CLI
-        run: |
-          npm install -g supabase
+      - name: Install Supabase CLI locally
+        run: npm install supabase --save-dev
 
       - name: Login to Supabase
-        run: supabase login --token ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: npx supabase login --token ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Link to Supabase project
-        run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: npx supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
 
       - name: Pull Supabase schema
-        run: supabase db pull
+        run: npx supabase db pull
 
       - name: Commit and push changes
         run: |
