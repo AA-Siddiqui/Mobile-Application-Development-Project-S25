@@ -26,7 +26,7 @@ jobs:
           SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_DB_PASSWORD }}
         run: |
           mkdir -p supabase
-          npx supabase db dump --file supabase/schema.sql --db-url postgresql://postgres:${SUPABASE_PROJECT_REF}@db.taakgxjwqeqziijeyoij.supabase.co:5432/postgres
+          npx supabase db dump --file supabase/schema.sql --db-url postgresql://postgres.taakgxjwqeqziijeyoij:${SUPABASE_PROJECT_REF}@aws-0-us-west-1.pooler.supabase.com:6543/postgres
 
       - name: Commit and push schema changes
         run: |
